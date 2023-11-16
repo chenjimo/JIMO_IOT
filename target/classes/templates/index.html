@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JIMO-IOT首页</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap; /* 允许元素在需要时换行 */
+            height: 100vh;
+        }
+
+        iframe {
+            flex: 1;
+            border: none;
+            box-sizing: border-box; /* 防止边框和内边距增加元素宽度 */
+            margin: 5px; /* 为了增加一些间距 */
+        }
+
+        @media (max-width: 768px) {
+            iframe {
+                flex: 100%; /* 在较小屏幕上占据整个宽度 */
+            }
+        }
+    </style>
+</head>
+<body>
+<iframe src="/templates/deviceView/temp.html" scrolling="no" frameborder="no" allowfullscreen="true"></iframe>
+<iframe src="/templates/deviceView/humidity.html" scrolling="no" frameborder="no" allowfullscreen="true"></iframe>
+<iframe src="/templates/deviceView/MQ2.html" scrolling="no" frameborder="no" allowfullscreen="true"></iframe>
+</body>
+</html>

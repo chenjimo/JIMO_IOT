@@ -1,0 +1,58 @@
+spring:
+  datasource:
+    #数据库用户名、密码，数据库名称(CareNote)按需求应要改写
+    username: jimo_iot
+    password: jimo_iot6789
+    url: jdbc:mysql://jimo.fun:3306/jimo_iot?serverTimezone=UTC&useUncide=true&characterEncoding=utf-8&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    static-path-pattern: /static/**
+  #   关闭thymeleaf缓存
+  thymeleaf:
+    cache: false
+
+  #    i18n
+  messages:
+    basename: i18n.login
+    encoding: utf-8
+
+  mail:
+    #根据163、qq等邮箱，更改为 smtp.163.com / smtp.qq.com
+    host: smtp.qq.com
+    #邮箱账号(需更改)
+    username: jimoworld@qq.com
+    password: zglnoripewyrjagd #smtp开启时的邮箱密码(需更改)
+    port: 465
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.ssl.enable: true
+      mail.smtp.socketFactory.port: 465
+      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+
+
+
+server:
+  port: 9288
+mybatis-plus:
+  mapper-locations: "classpath:mapper/*.xml"
+  type-aliases-package: jimo.iot.bean
+  configuration:
+    map-underscore-to-camel-case: true #开启驼峰命名
+jimo:
+  api-util:
+    weatherURL: "http://itdage.cn/hw/weather?city=" #天气请求API地址
+    sendURL: "http://itdage.cn/hw/hwSms?phoneNumber=" #消息发送API地址
+    stringLimit: 33 #字符长度限制,jimo.care.care_note.util.LimitUtil可能数据读取不到,请手动处理或考虑用properties
+    webhookURL: https://oapi.dingtalk.com/robot/send?access_token=290006f7f165f5dc1f505eb03f2d0c7d53b546b35eb75157f3acf9244daf9204&timestamp=
+  message:
+    email:
+      title: "，您好！这里是JIMO-IOT服务自动检测提醒！\n"
+      end: "<a href='//iot.jimo.fun/'><p 	style='font-size: 18px;background: linear-gradient(to right, red, blue);-webkit-background-clip: text;color: transparent;'>点击进入Care_Note了解详情,任何疑问可通过邮箱传递给我们❤谢谢配合!!!O(∩_∩)O</p></a>"
+      logo: //jimo.fun/img/my/JIMOlogo01.png
+    ding:
+    phone:
+  name: //iot.jimo.fun/ #域名地址！
+  alter:  #这里配置是否开启异常运维提醒仅允许填true或false（建议开启true，开发期间建议关闭！）
+    ding: true
+    email: true

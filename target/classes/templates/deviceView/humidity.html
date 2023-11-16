@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>温湿度记录页面</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+<canvas id="humidity_LineChart"></canvas>
+
+<script>
+    // 模拟的 Ajax 返回数据
+    var jsonData = [];
+
+
+    // 准备数据
+    function prepareData() {
+        const labels = jsonData.map(function (item) {
+            return new Date(item.time).toLocaleString('en-US', { day: 'numeric',hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+        });
+
+        const values = jsonData.map(function (item) {
+            return parseFloat(item.value).toFixed(2);
+        });
+
+        return { labels, values };
+    }
+
+    // 创建折线图
+    function createChart() {
+        var ctx = document.getElementById('humidity_LineChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '实时湿度（%RH）',
+                    data: [],
+                    borderColor: 'rgb(194,106,237)',
+                    tension: 0.1,
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'linear',
+                        position: 'bottom'
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            min: 0
+                        }
+                    }]
+                }
+            }
+        });
+
+        return chart;
+    }
+
+    // 更新图表数据和重新绘制
+    function updateChart(chart) {
+        const { labels, values } = prepareData();
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = values;
+        chart.update();
+    }
+
+    // 页面加载时创建图表并更新
+    $(document).ready(function () {
+        var chart = createChart();
+        $.ajax({
+            type: "get",
+            url: "/device/logs",
+            data: "deviceId=2",
+            async: false,
+            success: function (data) {
+                jsonData = data;
+                updateChart(chart);
+            }
+        });// 刷新时先更新一次数据
+
+
+        // 定时获取数据并更新图表（这里模拟每5秒获取一次数据）
+        setInterval(function () {
+            // 模拟的 Ajax 请求获取实时数据
+            $.ajax({
+                type: "get",
+                url: "/device/logs",
+                data: "deviceId=2",
+                async: false,
+                success: function (data) {
+                    jsonData = data;
+                    updateChart(chart);
+                }
+            });
+        }, 5000); // 5000毫秒（即5秒）更新一次数据
+    });
+</script>
+</body>
+</html>
