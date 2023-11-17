@@ -46,9 +46,11 @@ jimo:
     stringLimit: 33 #字符长度限制,jimo.care.care_note.util.LimitUtil可能数据读取不到,请手动处理或考虑用properties
     webhookURL: https://oapi.dingtalk.com/robot/send?access_token=290006f7f165f5dc1f505eb03f2d0c7d53b546b35eb75157f3acf9244daf9204&timestamp=
   message:
+    heartbeat: 30 #设置设备的心跳时间，用来判断设备的存活情况！默认会判断上线给5S冗余、下线为没有两次心跳的时间！
     email:
+      to: 1517962688@qq.com #默认的警报消息发送对象
       title: "，您好！这里是JIMO-IOT服务自动检测提醒！\n"
-      end: "<a href='//iot.jimo.fun/'><p 	style='font-size: 18px;background: linear-gradient(to right, red, blue);-webkit-background-clip: text;color: transparent;'>点击进入Care_Note了解详情,任何疑问可通过邮箱传递给我们❤谢谢配合!!!O(∩_∩)O</p></a>"
+      end: "<a href='//iot.jimo.fun/'><p 	style='font-size: 18px;background: linear-gradient(to right, red, blue);-webkit-background-clip: text;color: transparent;'>点击进入JIMO_IOT了解详情,任何疑问可通过邮箱传递给我们❤谢谢配合!!!O(∩_∩)O</p></a>"
       logo: //jimo.fun/img/my/JIMOlogo01.png
     ding:
     phone:
@@ -56,3 +58,4 @@ jimo:
   alter:  #这里配置是否开启异常运维提醒仅允许填true或false（建议开启true，开发期间建议关闭！）
     ding: true
     email: true
+    time: 60 #这里设置报警冷却时间，默认是60S

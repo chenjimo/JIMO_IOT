@@ -3,8 +3,10 @@ package jimo.iot.ctrl_module.controller;
 
 import jimo.iot.ctrl_module.entity.OderLog;
 import jimo.iot.ctrl_module.entity.OderMessage;
+import jimo.iot.ctrl_module.service.impl.ModuleMessageServiceImpl;
 import jimo.iot.ctrl_module.service.impl.OderLogServiceImpl;
 import jimo.iot.ctrl_module.service.impl.OderMessageServiceImpl;
+import jimo.iot.ctrl_module.service.impl.UserMessageServiceImpl;
 import jimo.iot.info.Message;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -27,14 +31,17 @@ import javax.annotation.Resource;
  * @since 2023-11-16
  */
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/oder")
 public class OderLogController {
 
     @Resource
     OderLogServiceImpl oderLogService;
     @Resource
     OderMessageServiceImpl oderMessageService;
-
+    @Resource
+    UserMessageServiceImpl userMessageService;
+    @Resource
+    ModuleMessageServiceImpl moduleMessageService;
     private static final String success = "恭喜您，操作成功！";
     private static final String error = "抱歉，操作失败，请重试！";
 
@@ -78,14 +85,23 @@ public class OderLogController {
      */
     @GetMapping("/logs")
     public Message getLogs(boolean isReadTime,Integer status){
-        return new Message(200,success,oderLogService.getLogs(isReadTime,status));
+        List logs = new ArrayList<OderLog>();
+                oderLogService.getLogs(isReadTime, status).forEach(
+                oderLog -> {
+                    oderLog.setOderName(oderMessageService.readOderMessage(oderLog.getOderId()).getName());
+                    oderLog.setUserName(userMessageService.getUserMessage(oderLog.getUserId()).getName());
+                    oderLog.setModuleName(moduleMessageService.getModuleMessage(oderLog.getModuleId()).getName());
+                    logs.add(oderLog);
+                }
+        );
+        return new Message(200,success,logs);
     }
     /***
      * 等待中(0)、执行中(1)、执行成功(2)、与执行失败(3)、已撤销（4）,判断是否可以撤销这条指令！
      * (大于0则表示不可以再撤销了)
      * @return
      */
-    @PostMapping("/log")
+    @PostMapping("/logs")
     public Message deleteOder(Integer oderId){
         String s = "撤回失败！";
         switch (oderLogService.isUpdate(oderId)) {

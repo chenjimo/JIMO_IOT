@@ -1,7 +1,6 @@
 package jimo.iot.ctrl_module.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import jimo.iot.ctrl_module.entity.UserMessage;
 import jimo.iot.ctrl_module.entity.UserModule;
 import jimo.iot.ctrl_module.mapper.UserModuleMapper;
 import jimo.iot.ctrl_module.service.IUserModuleService;

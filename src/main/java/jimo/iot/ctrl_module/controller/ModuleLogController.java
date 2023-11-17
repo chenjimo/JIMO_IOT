@@ -3,8 +3,8 @@ package jimo.iot.ctrl_module.controller;
 
 import jimo.iot.ctrl_module.entity.ModuleLog;
 import jimo.iot.ctrl_module.service.impl.ModuleLogServiceImpl;
-import jimo.iot.device_value.entity.DeviceLog;
 import jimo.iot.info.Message;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 

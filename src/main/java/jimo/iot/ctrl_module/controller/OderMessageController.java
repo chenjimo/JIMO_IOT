@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ import java.util.Map;
  * @since 2023-11-16
  */
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/oder")
 public class OderMessageController {
 
     @Resource
@@ -70,10 +71,14 @@ public class OderMessageController {
      * @param oderLog
      * @return
      */
-    @PostMapping("/message")
+    @PostMapping("/messages")
     public Message writeOderMessage(OderLog oderLog) {
-        if (oderMessageService.readOderMessage(oderLog.getOderId()).getStatus() > 0){//判断该指令是否可用
-            if (moduleLogService.upModuleById(oderLog.getModuleId())){//判断该模块是否在线
+        OderMessage oderMessage = oderMessageService.readOderMessage(oderLog.getOderId());
+        if (oderMessage != null && oderMessage.getStatus() > 0){//判断该指令是否可用
+            if (moduleLogService.upModuleById(oderMessage.getModuleId())){//判断该模块是否在线
+                oderLog.setUserId(oderLog.getUserId()==null?2:oderLog.getUserId());//默认的指令输入者为test
+                oderLog.setModuleId(oderMessage.getModuleId());//写入模块ID
+                oderLog.setWriteTime(LocalDateTime.now().plusMinutes(Integer.parseInt(oderLog.getDelay())));//设置延时执行时间（为分钟）
                 oderLogService.writeLog(oderLog);
                 userMessageService.addOperationRecord(oderLog.getUserId());//为用户增加写入记录
                 return new Message(200, "恭喜您，操作成功！", null);

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2023-11-15
  */
 @RestController
-@RequestMapping("/device_value/devic-message")
+@RequestMapping("/device")
 public class DeviceMessageController {
 
 }

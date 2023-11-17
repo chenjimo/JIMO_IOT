@@ -39,10 +39,14 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
      */
     @Override
     public OderLog readLog(Integer moduleId) {
-        OderLog oderLog = baseMapper.selectOne(Wrappers.<OderLog>lambdaQuery().
-                eq(OderLog::getModuleId, moduleId).eq(OderLog::getStatus, 0).
-                orderByDesc(OderLog::getWriteTime).last("LIMIT 1"));
-        baseMapper.updateById(new OderLog(oderLog.getId(), LocalDateTime.now()));
+        LocalDateTime now = LocalDateTime.now();
+        OderLog oderLog = baseMapper.selectOne(Wrappers.<OderLog>lambdaQuery()
+                .eq(OderLog::getModuleId, moduleId)
+                .eq(OderLog::getStatus, 0)//等待执行的状态
+                .isNull(OderLog::getReadTime)//指令暂未被读取
+                .le(OderLog::getWriteTime,now) // 小于等于当前时间
+                .orderByAsc(OderLog::getWriteTime));//按升序排列先查最早的数据
+        baseMapper.updateById(new OderLog(oderLog.getId(), now));
         return oderLog;
     }
 
@@ -59,6 +63,7 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
 
     /***
      * 用户获取全部指令记录信息（根据status和ReadTime分类为等待中、执行中、执行成功、与执行失败、已撤销）
+     * 把该指令记录有关的信息写入
      * @param isReadOrder
      * @param status
      * @return

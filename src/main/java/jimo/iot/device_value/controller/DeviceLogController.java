@@ -38,7 +38,7 @@ public class DeviceLogController {
      * @param deviceLog
      * @return
      */
-    @GetMapping("/logs")
+    @GetMapping("/log")
     public List<DeviceLog> getLogs(DeviceLog deviceLog) {
       return deviceLogService.getDeviceLogsByDeviceId(deviceLog.getDeviceId());
       }

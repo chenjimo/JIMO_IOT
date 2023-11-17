@@ -27,7 +27,7 @@ public class DeviceMessage implements Serializable {
 
     private String unit;
 
-    private String man;
+    private String max;
 
     private String min;
 
@@ -36,13 +36,13 @@ public class DeviceMessage implements Serializable {
     public DeviceMessage() {
     }
 
-    public DeviceMessage(Integer id, String name, Integer moduleId, String type, String unit, String man, String min, String bz) {
+    public DeviceMessage(Integer id, String name, Integer moduleId, String type, String unit, String max, String min, String bz) {
         this.id = id;
         this.name = name;
         this.moduleId = moduleId;
         this.type = type;
         this.unit = unit;
-        this.man = man;
+        this.max = max;
         this.min = min;
         this.bz = bz;
     }

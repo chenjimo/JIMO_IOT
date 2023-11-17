@@ -6,7 +6,6 @@ import jimo.iot.ctrl_module.service.impl.ModuleLogServiceImpl;
 import jimo.iot.ctrl_module.service.impl.ModuleMessageServiceImpl;
 import jimo.iot.info.Message;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;

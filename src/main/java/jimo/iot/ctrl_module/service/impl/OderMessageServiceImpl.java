@@ -42,17 +42,23 @@ public class OderMessageServiceImpl extends ServiceImpl<OderMessageMapper, OderM
      */
     @Override
     public Map<String, List<OderMessage>> readOderMessagesByOrderModule() {
-        List list = new ArrayList<OderMessage>();
         Map map = new HashMap<String, List<OderMessage>>();
         baseMapper.selectObjs(Wrappers.<OderMessage>lambdaQuery()
                 .groupBy(OderMessage::getModuleId)
                 .select(OderMessage::getModuleId))
                 .forEach(
                 moduleId -> {
-                    list.addAll(baseMapper.selectList(Wrappers.<OderMessage>lambdaQuery()
-                            .eq(OderMessage::getModuleId, moduleId)));
+                    List list = new ArrayList<OderMessage>();
+                    String name = moduleMessageService.getModuleMessage((Integer) moduleId).getName();
+                    baseMapper.selectList(Wrappers.<OderMessage>lambdaQuery()
+                            .eq(OderMessage::getModuleId, moduleId)).forEach(
+                            oderMessage -> {
+                                oderMessage.setModuleName(name);
+                                list.add(oderMessage);
+                            }
+                    );
                     //将Module的name写入到对应的Map中进行存储
-                    map.put(moduleMessageService.getModuleMessage((Integer) moduleId).getName(), list);
+                    map.put(name,list);
                 }
         );
         return map;

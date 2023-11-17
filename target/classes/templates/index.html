@@ -4,31 +4,65 @@
     <meta charset="UTF-8">
     <title>JIMO-IOT首页</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
+        /* 使用 flexbox 布局，横向排列 */
+        .container {
             display: flex;
-            flex-wrap: wrap; /* 允许元素在需要时换行 */
-            height: 100vh;
+            flex-wrap: wrap;
+            justify-content: space-between; /* 左右两侧对齐 */
+            align-items: stretch; /* 垂直方向占满整个高度 */
         }
 
-        iframe {
-            flex: 1;
-            border: none;
-            box-sizing: border-box; /* 防止边框和内边距增加元素宽度 */
-            margin: 5px; /* 为了增加一些间距 */
+        /* 前三个页面占整个屏幕宽度的30% */
+        .container iframe:nth-child(-n+3) {
+            flex: 0 0 32%;
+            width: 32%;
+            margin-bottom: 20px; /* 设置页面之间的间隔，根据需要调整 */
         }
 
+        /* 在较小屏幕上纵向排列 */
         @media (max-width: 768px) {
-            iframe {
-                flex: 100%; /* 在较小屏幕上占据整个宽度 */
+            .container {
+                flex-direction: column; /* 纵向排列 */
+                align-items: center; /* 居中 */
             }
+
+            .container iframe:nth-child(-n+3) {
+                width: 100%; /* 占满整个宽度 */
+                margin-bottom: 20px; /* 设置页面之间的间隔，根据需要调整 */
+            }
+            /* 第四个页面占整个屏幕宽度的60% */
+            .container iframe:nth-child(4) {
+                flex: 0 0 90%;
+                width: 90%;
+                height: 800px;
+                margin: auto; /* 在水平方向上居中 */
+            }
+        }
+
+        /* 第四个页面占整个屏幕宽度的60% */
+        .container iframe:nth-child(4) {
+            flex: 0 0 90%;
+            width: 90%;
+            height: 800px;
+            margin: auto; /* 在水平方向上居中 */
+        }
+        .background-image {
+            /*width: 100%; !* 设置 div 的宽度 *!*/
+            height: 1000px; /* 设置 div 的高度 */
+            background-image: url('../static/img/img_1.png'); /* 设置背景图片的路径 */
+            background-size: cover; /* 背景图片大小适应div，并保持比例 */
+            background-position: center; /* 背景图片在 div 中居中显示 */
+            background-repeat: no-repeat; /* 禁止背景图片重复显示 */
         }
     </style>
 </head>
-<body>
-<iframe src="/templates/deviceView/temp.html" scrolling="no" frameborder="no" allowfullscreen="true"></iframe>
-<iframe src="/templates/deviceView/humidity.html" scrolling="no" frameborder="no" allowfullscreen="true"></iframe>
-<iframe src="/templates/deviceView/MQ2.html" scrolling="no" frameborder="no" allowfullscreen="true"></iframe>
+<body class="background-image">
+<div class="container">
+    <iframe src="/templates/deviceView/temp.html"  frameborder="no" allowfullscreen="true"></iframe>
+    <iframe src="/templates/deviceView/humidity.html" frameborder="no" allowfullscreen="true"></iframe>
+    <iframe src="/templates/deviceView/MQ2.html"  frameborder="no" allowfullscreen="true"></iframe>
+    <iframe src="/templates/controller/index.html"  frameborder="no" allowfullscreen="true"></iframe>
+    <a href="/templates/controller/index.html">GOTO ---》》》JIMO-IOT 控制中心！！！ </a>
+</div>
 </body>
 </html>

@@ -38,6 +38,14 @@ public class OderLog implements Serializable {
     // 这个属性不会被映射到数据库
     @TableField(exist = false)
     private String oderMessage;
+    @TableField(exist = false)
+    private String oderName;
+    @TableField(exist = false)
+    private String moduleName;
+    @TableField(exist = false)
+    private String userName;
+    @TableField(exist = false)
+    private String delay;
 
     public String getOderMessage() {
         return oderMessage;

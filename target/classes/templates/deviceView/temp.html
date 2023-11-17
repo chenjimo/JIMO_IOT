@@ -72,7 +72,7 @@
         var chart = createChart();
         $.ajax({
             type: "get",
-            url: "/device/logs",
+            url: "/device/log",
             data: "deviceId=1",
             async: false,
             success: function (data) {
@@ -87,7 +87,7 @@
             // 模拟的 Ajax 请求获取实时数据
             $.ajax({
                 type: "get",
-                url: "/device/logs",
+                url: "/device/log",
                 data: "deviceId=1",
                 async: false,
                 success: function (data) {
