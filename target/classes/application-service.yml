@@ -51,7 +51,7 @@ jimo:
       to: 1517962688@qq.com #默认的警报消息发送对象
       title: "，您好！这里是JIMO-IOT服务自动检测提醒！\n"
       end: "<a href='//iot.jimo.fun/'><p 	style='font-size: 18px;background: linear-gradient(to right, red, blue);-webkit-background-clip: text;color: transparent;'>点击进入JIMO_IOT了解详情,任何疑问可通过邮箱传递给我们❤谢谢配合!!!O(∩_∩)O</p></a>"
-      logo: //jimo.fun/img/my/JIMOlogo01.png
+      logo: http://jimo.fun/img/my/JIMOlogo01.png
     ding:
     phone:
   name: //iot.jimo.fun/ #域名地址！

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -50,5 +51,15 @@ public class DeviceLogController {
     @GetMapping("/logs")
     public List<DeviceLog> getLogs(DeviceLog deviceLog,Integer jt) {
         return deviceLogService.getDeviceLogsByDeviceIdAndJT(deviceLog.getDeviceId(),jt);
+    }
+    /***
+     * 详细的完善求每日平均值的周时间的数值JSON
+     * @param deviceLog getDeviceId
+     * @param jt 条数限制
+     * @param avg 平均方式（1：按小时、2：按天、3：按月）
+     */
+    @GetMapping("/logs/avg")
+    public List<Map<String,Object>> getLogsByAVG(DeviceLog deviceLog, Integer jt, Integer avg) {
+        return deviceLogService.getDeviceLogByAVG(deviceLog.getDeviceId(),jt,avg);
     }
 }

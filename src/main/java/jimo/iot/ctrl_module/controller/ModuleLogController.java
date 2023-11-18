@@ -28,6 +28,12 @@ public class ModuleLogController {
     ModuleLogServiceImpl moduleLogService;
     private static final String success = "恭喜您，操作成功！";
     private static final String error = "抱歉，操作失败，请重试！";
+
+    /***
+     * 传感器的心跳验证！
+     * @param moduleLog
+     * @return
+     */
     @PostMapping("/log")
     public Message insert(ModuleLog moduleLog){
         moduleLog.setTime(LocalDateTime.now());

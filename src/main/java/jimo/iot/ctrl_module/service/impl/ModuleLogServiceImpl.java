@@ -41,13 +41,16 @@ public class ModuleLogServiceImpl extends ServiceImpl<ModuleLogMapper, ModuleLog
      */
     @Override
     public boolean upModuleById(Integer id) {
-        LocalDateTime time = baseMapper.selectOne(
+        ModuleLog moduleLog = baseMapper.selectOne(
                 Wrappers.<ModuleLog>lambdaQuery()
                         .eq(ModuleLog::getModuleId, id)
                         .orderByDesc(ModuleLog::getTime)
-                        .last("LIMIT 1")).getTime();
+                        .last("LIMIT 1")); // 添加限制只查询一条数据
+        if (moduleLog == null) {
+            return false;
+        }
         // 计算相差的秒数
-        long secondsDifference = Duration.between(time,LocalDateTime.now()).getSeconds();
+        long secondsDifference = Duration.between(moduleLog.getTime(),LocalDateTime.now()).getSeconds();
         return secondsDifference <= heartbeat+5;//给5S的缓冲时间，防止网络拥堵等情况
     }
 
@@ -58,13 +61,16 @@ public class ModuleLogServiceImpl extends ServiceImpl<ModuleLogMapper, ModuleLog
      */
     @Override
     public boolean downModuleById(Integer id) {
-            LocalDateTime time = baseMapper.selectOne(
+        ModuleLog moduleLog = baseMapper.selectOne(
                     Wrappers.<ModuleLog>lambdaQuery()
                             .eq(ModuleLog::getModuleId, id)
                             .orderByDesc(ModuleLog::getTime)
-                            .last("LIMIT 1")).getTime();
+                            .last("LIMIT 1"));
+        if (moduleLog == null) {
+            return true;
+        }
             // 计算相差的秒数
-            long secondsDifference = Duration.between(time,LocalDateTime.now()).getSeconds();
+            long secondsDifference = Duration.between(moduleLog.getTime(),LocalDateTime.now()).getSeconds();
             return secondsDifference > heartbeat*2;//连续两次都没有心跳，设备就算真的凉了！
     }
 }

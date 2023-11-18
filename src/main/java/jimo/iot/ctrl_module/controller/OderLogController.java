@@ -102,11 +102,11 @@ public class OderLogController {
      * @return
      */
     @PostMapping("/logs")
-    public Message deleteOder(Integer oderId){
+    public Message deleteOder(Integer oderLogId){
         String s = "撤回失败！";
-        switch (oderLogService.isUpdate(oderId)) {
+        switch (oderLogService.isUpdate(oderLogId)) {
             case 0:
-                s = oderLogService.updateLog(oderId, -1)?success:error;
+                s = oderLogService.updateLog(oderLogId, -1)?success:error;
                 break;
             case 1:
                 s = "该指令正在执行中，无法撤回！";

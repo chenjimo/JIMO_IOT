@@ -31,12 +31,23 @@ public class ModuleMessageController {
     ModuleLogServiceImpl moduleLogService;
     private static final String success = "恭喜您，操作成功！";
     private static final String error = "抱歉，操作失败，请重试！";
+
+    /***
+     * 获取一个模块信息
+     * @param moduleId
+     * @return
+     */
     @GetMapping("/message")
     public Message getModuleMessage(Integer moduleId) {
         moduleMessageService.updateModuleStatus(moduleId,
                 moduleLogService.upModuleById(moduleId) || !moduleLogService.downModuleById(moduleId)?1:0);
         return new Message(200,success, moduleMessageService.getModuleMessage(moduleId));
     }
+
+    /***
+     * 获取全部模块信息
+     * @return
+     */
     @GetMapping("/messages")
     public Message getModuleMessages() {
         List moduleMessageList = new ArrayList<ModuleMessage>();

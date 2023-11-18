@@ -1,9 +1,9 @@
 spring:
   datasource:
     #数据库用户名、密码，数据库名称(CareNote)按需求应要改写
-    username: care_note
-    password: care_note
-    url: jdbc:mysql://ubuntu:3306/care_note?serverTimezone=UTC&useUncide=true&characterEncoding=utf-8&useSSL=true
+    username: XXXX
+    password: XXXX
+    url: jdbc:mysql://XXXX:3306/XXXX?serverTimezone=UTC&useUncide=true&characterEncoding=utf-8&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     static-path-pattern: /static/**
@@ -18,10 +18,10 @@ spring:
 
   mail:
     #根据163、qq等邮箱，更改为 smtp.163.com / smtp.qq.com
-    host: XXX.qq.com
+    host: smtp.qq.com
     #邮箱账号(需更改)
-    username: XXXX@qq.com
-    password: XXXXXXXXXX #smtp开启时的邮箱密码(需更改)
+    username: XXXXd@qq.com
+    password: XXXXd #smtp开启时的邮箱密码(需更改)
     port: 465
     protocol: smtp
     default-encoding: UTF-8
@@ -33,26 +33,29 @@ spring:
 
 
 server:
-  port: 9277
+  port: 9288
 mybatis-plus:
   mapper-locations: "classpath:mapper/*.xml"
-  type-aliases-package: jimo.care.car_note.bean
+  type-aliases-package: jimo.iot.bean
   configuration:
     map-underscore-to-camel-case: true #开启驼峰命名
 jimo:
   api-util:
-    weatherURL: "https://XXXXXXXXX/weather?city=" #天气请求API地址，需要换成您自己的！
-    sendURL: "https://XXXXXXXXXX/hwSms?phoneNumber=" #phone消息发送API地址，需要换成您自己的！
+    weatherURL: "http://itdage.cn/hw/weather?city=" #天气请求API地址
+    sendURL: "http://itdage.cn/hw/hwSms?phoneNumber=" #消息发送API地址
     stringLimit: 33 #字符长度限制,jimo.care.care_note.util.LimitUtil可能数据读取不到,请手动处理或考虑用properties
-    webhookURL: https://oapi.dingtalk.com/robot/send?access_token=XXXXXXXXXXXXXXXXXXXXX&timestamp= #钉钉消息发送API地址，需要换成您自己的！
+    webhookURL: https://oapi.dingtalk.com/robot/send?access_token=XXXXd&timestamp=XXXXd
   message:
+    heartbeat: 30 #设置设备的心跳时间，用来判断设备的存活情况！默认会判断上线给5S冗余、下线为没有两次心跳的时间！
     email:
-      title: "，您好！这里是JIMO-Care_Note服务自动检测提醒！\n"
-      end: "<a href='http://care.jimo.fun/'><p 	style='font-size: 18px;background: linear-gradient(to right, red, blue);-webkit-background-clip: text;color: transparent;'>点击进入Care_Note了解详情,任何疑问可通过邮箱传递给我们❤谢谢配合!!!O(∩_∩)O</p></a>"
+      to: XXXXd@qq.com #默认的警报消息发送对象
+      title: "，您好！这里是JIMO-IOT服务自动检测提醒！\n"
+      end: "<a href='//iot.jimo.fun/'><p 	style='font-size: 18px;background: linear-gradient(to right, red, blue);-webkit-background-clip: text;color: transparent;'>点击进入JIMO_IOT了解详情,任何疑问可通过邮箱传递给我们❤谢谢配合!!!O(∩_∩)O</p></a>"
       logo: http://jimo.fun/img/my/JIMOlogo01.png
     ding:
     phone:
-  name: http://care.jimo.fun/ #域名地址！
+  name: //iot.jimo.fun/ #域名地址！
   alter:  #这里配置是否开启异常运维提醒仅允许填true或false（建议开启true，开发期间建议关闭！）
     ding: true
     email: true
+    time: 60 #这里设置报警冷却时间，默认是60S

@@ -5,6 +5,7 @@ import jimo.iot.device_value.entity.DeviceLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -37,4 +38,13 @@ public interface IDeviceLogService extends IService<DeviceLog> {
      * @return
      */
     List<DeviceLog> getDeviceLogsByDeviceIdAndJT(Integer deviceId, Integer jt);
+
+    /***
+     * 详细的完善求每日平均值的周时间的数值JSON（最后在开发）
+     * @param deviceId
+     * @param jt 条数限制
+     * @param avg 平均方式
+     * @return
+     */
+    List<Map<String,Object>> getDeviceLogByAVG(Integer deviceId, Integer jt, Integer avg);
 }

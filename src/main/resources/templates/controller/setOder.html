@@ -4,7 +4,7 @@
     <title>JIMO-IOT-Oder</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-
+    <link rel="shortcut icon" href="//jimo.fun/img/my/jm.png"/>
     <link href="../../static/css/normalize.css" type="text/css" rel="stylesheet"/>
     <link href="../../static/css/common.css" type="text/css" rel="stylesheet"/>
     <script src="../../static/js/jquery.min.js" type="text/javascript"></script>
@@ -254,7 +254,7 @@
                 layer.msg(data.result);
                 if (data.status === 200) {
                     //录入成功,返回控制中心记录页面
-                    window.location.href = "/ctrl";
+                    window.location.href = "/templates/controller/index.html";
                 } else {
                     //录入失败
                 }
