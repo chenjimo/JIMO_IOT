@@ -6,51 +6,61 @@
     <link rel="shortcut icon" href="//jimo.fun/img/my/jm.png"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <style type="text/css">
-        body{
+        body {
             margin: 0;
             padding: 0;
             background-color: #eeeeee;
             font-family: "楷体";
         }
-        .item{
+
+        .item {
             margin: 20px;
             margin-bottom: 50px;
         }
-        .imte_top{
+
+        .imte_top {
             text-align: center;
         }
-        .imte_top>span{
-            font-size:14px;
+
+        .imte_top > span {
+            font-size: 14px;
             display: inline-block;
             padding: 5px 12px;
             background-color: #ddd;
-            color:#fff;
+            color: #fff;
             border-radius: 5px;
         }
-        .item_content{
+
+        .item_content {
             background-color: #fff;
             padding: 25px 15px;
             margin-top: 6px;
         }
-        .item_content_top_1{
+
+        .item_content_top_1 {
             font-size: 24px;
             font-weight: bold;
         }
-        .item_content_top_2{
-            color:#eee;
+
+        .item_content_top_2 {
+            color: #eee;
             font-size: 14px;
             margin: 5px 0px;
         }
-        .item_content_top_3{
+
+        .item_content_top_3 {
             margin: 10px 0px;
         }
-        .item_content_top_4{
+
+        .item_content_top_4 {
             margin: 10px 0px;
         }
-        .item_content_bottom>a{
+
+        .item_content_bottom > a {
             text-decoration: none;
-            color:#33e;
+            color: #33e;
         }
+
         .submitBtn {
             width: 90%;
             margin: 0 auto;
@@ -61,14 +71,16 @@
             color: #fff;
             font-weight: bolder;
         }
+
         .background-image {
             /*width: 100%; !* 设置 div 的宽度 *!*/
-            height:1200px; /* 设置 div 的高度 */
+            height: 1200px; /* 设置 div 的高度 */
             background-image: url('../../static/img/img.png'); /* 设置背景图片的路径 */
             background-size: cover; /* 背景图片大小适应div，并保持比例 */
             background-position: center; /* 背景图片在 div 中居中显示 */
             background-repeat: no-repeat; /* 禁止背景图片重复显示 */
         }
+
         /* 定义滚动条的宽度、颜色和圆角 */
         ::-webkit-scrollbar {
             width: 8px; /* 宽度 */
@@ -98,25 +110,67 @@
             background-color: #f1f1f1;
         }
 
+        .aId {
+            display: inline-block;
+            font-size: 18px;
+            padding: 10px 18px;
+            background-color: #be9368;
+            color: #06fccf;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid #a1fd15;
+        }
+
     </style>
 </head>
 <body class="background-image ">
-<br>
-<a href="/templates/controller/setOder.html"><div class="submitBtn" >下发控制指令！</div></a>>
+<br/>
+<a href="/templates/controller/setOder.html">
+    <div class="submitBtn">下发控制指令！</div>
+</a>
+<br/>
+<div style="text-align: center;">
+    <a href="/templates/controller/indexAll.html" class="aId">点击-查看全部命令执行状态数据！</a>
+</div>
+<br/>
 <div class="content" id="dataTable1">
     <h1 align="center">%%%暂无等待执行的指令%%%</h1>
 </div>
+<br/>
+<div style="text-align: center;">
+    <a href="/templates/controller/indexAll-1.html" class="aId">点击-查看“全部等待执行”状态的数据！</a>
+</div>
+<br/>
 <div class="content" id="dataTable2">
-    <h1 align="center" >****暂无正在执行的指令****</h1>
+    <h1 align="center">****暂无正在执行的指令****</h1>
 </div>
+<br/>
+<div style="text-align: center;">
+    <a href="/templates/controller/indexAll-2.html" class="aId">点击-查看“全部正在执行”状态的数据！</a>
+</div>
+<br/>
 <div class="content" id="dataTable3">
-    <h1 align="center" >~~~暂无执行成功的记录~~~</h1>
+    <h1 align="center">~~~暂无执行成功的记录~~~</h1>
 </div>
+<br/>
+<div style="text-align: center;">
+    <a href="/templates/controller/indexAll-3.html" class="aId">点击-查看“全部执行成功”状态的数据！</a>
+</div>
+<br/>
 <div class="content" id="dataTable4">
-    <h1 align="center" >###暂无执行失败的记录###</h1>
+    <h1 align="center">###暂无执行失败的记录###</h1>
 </div>
+<br/>
+<div style="text-align: center;">
+    <a href="/templates/controller/indexAll-4.html" class="aId">点击-查看“全部执行失败”状态的数据！</a>
+</div>
+<br/>
 <div class="content" id="dataTable5">
-    <h1 align="center" >……暂无撤销的指令……</h1>
+    <h1 align="center">……暂无撤销的指令……</h1>
+</div>
+<br/>
+<div style="text-align: center;">
+    <a href="/templates/controller/indexAll-5.html" class="aId">点击-查看“全部撤销执行”状态的数据！</a>
 </div>
 </body>
 <script src="../../static/js/jquery.min.js"></script>
@@ -125,12 +179,12 @@
 <script>
     function deleteByID(id) {
         layer.confirm("请您谨慎操作！确定要撤销该指令吗？💔",
-            {btn:['我心已决！','再想想']},function () {
-                $.post("/oder/logs", {oderLogId : id}, function (data) {
+            {btn: ['我心已决！', '再想想']}, function () {
+                $.post("/oder/logs", {oderLogId: id}, function (data) {
                     layer.msg(data.result);
-                    window.location.href = "/templates/controller/index.html";
+                    // window.location.href = "/templates/controller/index.html";
                 });
-            },function () {
+            }, function () {
                 layer.msg("已成功取消！");
             }
         );
@@ -138,160 +192,167 @@
 
     $(function () {
         //等待执行的命令
-        $.get("/oder/logs",{ isReadTime: false, status: 0 },function (data) {
-            if (data.status!==200){
+        $.get("/oder/logs/limit", {isReadTime: false, status: 0, limitNum: 5}, function (data) {
+            if (data.status !== 200) {
                 layer.msg("系统异常请重新尝试！");
                 return;
             }
             var data1 = data.data;
-            if (data1!=null){
+            if (data1 !== null) {
                 $("#dataTable1").html("");
-                for (i=0;i<data1.length;i++){
+                for (i = 0; i < data1.length; i++) {
                     var item = "<div class=\"item\">\n" +
-                        "\t\t\t<div class=\"imte_top\"><span>"+data1[i].writeTime+"</span></div>\n" +
+                        "\t\t\t<div class=\"imte_top\" style=\"color:#0eb1d0\"><span>" + data1[i].writeTime + "</span></div>\n" +
                         "\t\t\t<div class=\"item_content\">\n" +
                         "\t\t\t\t<div class=\"item_content_top\">\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_1\">正在等待执行的指令!</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_2\">"+data1[i].writeTime+"</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:"+data1[i].oderName+"</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_1\" style=\"color:#74ef32\">正在等待执行的指令!</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_2\" style=\"color:#d08c0e\">" + data1[i].writeTime + "</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:" + data1[i].oderName + "</div>\n" +
                         "\t\t\t\t\t<div class=\"item_content_top_4\">\n" +
-                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">"+data1[i].moduleName+"</span><br>\n" +
-                        "\t\t\t\t\t\t该指令的下发用户为:"+data1[i].userName+"<br>\n" +
+                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">" + data1[i].moduleName + "</span><br>\n" +
+                        "\t\t\t\t\t\t该指令的下发用户为:" + data1[i].userName + "<br>\n" +
                         "\t\t\t\t\t</div>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t\t<hr>\n" +
                         "\t\t\t\t<div class=\"item_content_bottom\">\n" +
-                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID("+data1[i].id+")'>撤销该指令！</a>\n" +
+                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID(" + data1[i].id + ")'>撤销该指令！</a>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t</div>\n" +
                         "\t\t</div>";
                     $("#dataTable1").append(item);
                 }
-            }});
+            }
+        });
         //正在执行的命令
-        $.get("/oder/logs",{ isReadTime: true, status: 0 },function (data) {
-            if (data.status!==200){
+        $.get("/oder/logs/limit", {isReadTime: true, status: 0, limitNum: 5}, function (data) {
+            if (data.status !== 200) {
                 layer.msg("系统异常请重新尝试！");
                 return;
             }
             var data1 = data.data;
-            if (data1!=null){
+            if (data1 !== null) {
                 $("#dataTable2").html("");
-                for (i=0;i<data1.length;i++){
+                for (i = 0; i < data1.length; i++) {
                     var item = "<div class=\"item\">\n" +
-                        "\t\t\t<div class=\"imte_top\"><span>"+data1[i].writeTime+"</span></div>\n" +
+                        "\t\t\t<div class=\"imte_top\" style=\"color:#0eb1d0\"><span>" + data1[i].writeTime + "</span></div>\n" +
                         "\t\t\t<div class=\"item_content\">\n" +
                         "\t\t\t\t<div class=\"item_content_top\">\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_1\">正在执行的指令!</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_2\">"+data1[i].readTime+"</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:"+data1[i].oderName+"</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_1\" style=\"color:#8a30ea\">正在执行的指令!</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_2\"  style=\"color:#d08c0e\">" + data1[i].readTime + "</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:" + data1[i].oderName + "</div>\n" +
                         "\t\t\t\t\t<div class=\"item_content_top_4\">\n" +
-                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">"+data1[i].moduleName+"</span><br>\n" +
-                        "\t\t\t\t\t\t该指令的下发用户为:"+data1[i].userName+"<br>\n" +
+                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">" + data1[i].moduleName + "</span><br>\n" +
+                        "\t\t\t\t\t\t该指令的下发用户为:" + data1[i].userName + "<br>\n" +
                         "\t\t\t\t\t</div>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t\t<hr>\n" +
                         "\t\t\t\t<div class=\"item_content_bottom\">\n" +
-                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID("+data1[i].id+")'>撤销该指令！</a>\n" +
+                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID(" + data1[i].id + ")'>撤销该指令！</a>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t</div>\n" +
                         "\t\t</div>";
                     $("#dataTable2").append(item);
                 }
-            }});
+            }
+        });
         //执行成功
-        $.get("/oder/logs",{ isReadTime: true, status: 1 },function (data) {
-            if (data.status!==200){
+        $.get("/oder/logs/limit", {isReadTime: true, status: 1, limitNum: 3}, function (data) {
+            if (data.status !== 200) {
                 layer.msg("系统异常请重新尝试！");
                 return;
             }
             var data1 = data.data;
-            if (data1!=null){
+            if (data1 !== null) {
                 $("#dataTable3").html("");
-                for (i=0;i<data1.length;i++){
+                for (i = 0; i < data1.length; i++) {
                     var item = "<div class=\"item\">\n" +
-                        "\t\t\t<div class=\"imte_top\"><span>"+data1[i].writeTime+"</span></div>\n" +
+                        "\t\t\t<div class=\"imte_top\" style=\"color:#0eb1d0\"><span>" + data1[i].writeTime + "</span></div>\n" +
                         "\t\t\t<div class=\"item_content\">\n" +
                         "\t\t\t\t<div class=\"item_content_top\">\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_1\">执行成功的指令!</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_2\">"+data1[i].readTime+"</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:"+data1[i].oderName+"</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_1\" style=\"color:#f6761b\">执行成功的指令!</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_2\"  style=\"color:#d08c0e\">" + data1[i].readTime + "</div>\n" +
+                        "\t\t\t\t\t\t备注信息:<span style=\"color:#b100fc\">" + data1[i].bz + "</span><br>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:" + data1[i].oderName + "</div>\n" +
                         "\t\t\t\t\t<div class=\"item_content_top_4\">\n" +
-                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">"+data1[i].moduleName+"</span><br>\n" +
-                        "\t\t\t\t\t\t该指令的下发用户为:"+data1[i].userName+"<br>\n" +
+                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">" + data1[i].moduleName + "</span><br>\n" +
+                        "\t\t\t\t\t\t该指令的下发用户为:" + data1[i].userName + "<br>\n" +
                         "\t\t\t\t\t</div>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t\t<hr>\n" +
                         "\t\t\t\t<div class=\"item_content_bottom\">\n" +
-                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID("+data1[i].id+")'>撤销该指令！</a>\n" +
+                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID(" + data1[i].id + ")'>撤销该指令！</a>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t</div>\n" +
                         "\t\t</div>";
                     $("#dataTable3").append(item);
                 }
-            }});
+            }
+        });
         //执行失败的命令
-        $.get("/oder/logs",{ isReadTime: true, status: 2 },function (data) {
-            if (data.status!==200){
+        $.get("/oder/logs/limit", {isReadTime: true, status: 2, limitNum: 3}, function (data) {
+            if (data.status !== 200) {
                 layer.msg("系统异常请重新尝试！");
                 return;
             }
             var data1 = data.data;
-            if (data1!=null){
+            if (data1 !== null) {
                 $("#dataTable4").html("");
-                for (i=0;i<data1.length;i++){
+                for (i = 0; i < data1.length; i++) {
                     var item = "<div class=\"item\">\n" +
-                        "\t\t\t<div class=\"imte_top\"><span>"+data1[i].writeTime+"</span></div>\n" +
+                        "\t\t\t<div class=\"imte_top\" style=\"color:#0eb1d0\"><span>" + data1[i].writeTime + "</span></div>\n" +
                         "\t\t\t<div class=\"item_content\">\n" +
                         "\t\t\t\t<div class=\"item_content_top\">\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_1\">执行失败的指令!</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_2\">"+data1[i].readTime+"</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:"+data1[i].oderName+"</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_1\" style=\"color:#f1158b\">执行失败的指令!</div>\n" +
+                        "\t\t\t\t\t\t备注信息:<span style=\"color:#b100fc\">" + data1[i].bz + "</span><br>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_2\"  style=\"color:#d08c0e\">" + data1[i].readTime + "</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:" + data1[i].oderName + "</div>\n" +
                         "\t\t\t\t\t<div class=\"item_content_top_4\">\n" +
-                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">"+data1[i].moduleName+"</span><br>\n" +
-                        "\t\t\t\t\t\t该指令的下发用户为:"+data1[i].userName+"<br>\n" +
+                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">" + data1[i].moduleName + "</span><br>\n" +
+                        "\t\t\t\t\t\t该指令的下发用户为:" + data1[i].userName + "<br>\n" +
                         "\t\t\t\t\t</div>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t\t<hr>\n" +
                         "\t\t\t\t<div class=\"item_content_bottom\">\n" +
-                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID("+data1[i].id+")'>撤销该指令！</a>\n" +
+                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID(" + data1[i].id + ")'>撤销该指令！</a>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t</div>\n" +
                         "\t\t</div>";
                     $("#dataTable4").append(item);
                 }
-            }});
+            }
+        });
         //撤销的命令isReadTime: true, status: -1由于撤销会记录撤销时间
-        $.get("/oder/logs",{ isReadTime: true, status: -1 },function (data) {
-            if (data.status!==200){
+        $.get("/oder/logs/limit", {isReadTime: true, status: -1, limitNum: 3}, function (data) {
+            if (data.status !== 200) {
                 layer.msg("系统异常请重新尝试！");
                 return;
             }
             var data1 = data.data;
-            if (data1!=null){
+            if (data1 !== null) {
                 $("#dataTable5").html("");
-                for (i=0;i<data1.length;i++){
+                for (i = 0; i < data1.length; i++) {
                     var item = "<div class=\"item\">\n" +
-                        "\t\t\t<div class=\"imte_top\"><span>"+data1[i].writeTime+"</span></div>\n" +
+                        "\t\t\t<div class=\"imte_top\" style=\"color:#0eb1d0\"><span>" + data1[i].writeTime + "</span></div>\n" +
                         "\t\t\t<div class=\"item_content\">\n" +
                         "\t\t\t\t<div class=\"item_content_top\">\n" +
                         "\t\t\t\t\t<div class=\"item_content_top_1\">已撤销的指令!</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_2\">"+data1[i].readTime+"</div>\n" +
-                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:"+data1[i].oderName+"</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_2\"  style=\"color:#d08c0e\">" + data1[i].readTime + "</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:" + data1[i].oderName + "</div>\n" +
                         "\t\t\t\t\t<div class=\"item_content_top_4\">\n" +
-                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">"+data1[i].moduleName+"</span><br>\n" +
-                        "\t\t\t\t\t\t该指令的下发用户为:"+data1[i].userName+"<br>\n" +
+                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">" + data1[i].moduleName + "</span><br>\n" +
+                        "\t\t\t\t\t\t该指令的下发用户为:" + data1[i].userName + "<br>\n" +
                         "\t\t\t\t\t</div>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t\t<hr>\n" +
                         "\t\t\t\t<div class=\"item_content_bottom\">\n" +
-                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID("+data1[i].id+")'>撤销该指令！</a>\n" +
+                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID(" + data1[i].id + ")'>撤销该指令！</a>\n" +
                         "\t\t\t\t</div>\n" +
                         "\t\t\t</div>\n" +
                         "\t\t</div>";
                     $("#dataTable5").append(item);
                 }
-            }});
+            }
+        });
 
     });
 

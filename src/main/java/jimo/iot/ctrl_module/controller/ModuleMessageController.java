@@ -5,6 +5,7 @@ import jimo.iot.ctrl_module.entity.ModuleMessage;
 import jimo.iot.ctrl_module.service.impl.ModuleLogServiceImpl;
 import jimo.iot.ctrl_module.service.impl.ModuleMessageServiceImpl;
 import jimo.iot.info.Message;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -37,6 +38,7 @@ public class ModuleMessageController {
      * @param moduleId
      * @return
      */
+    @CrossOrigin(origins = "null", maxAge =-1)//用于解决前端的跨域资源共享问题
     @GetMapping("/message")
     public Message getModuleMessage(Integer moduleId) {
         moduleMessageService.updateModuleStatus(moduleId,

@@ -47,4 +47,11 @@ public interface IDeviceLogService extends IService<DeviceLog> {
      * @return
      */
     List<Map<String,Object>> getDeviceLogByAVG(Integer deviceId, Integer jt, Integer avg);
+
+    /***
+     * 根据ID获取最新的数据时间限制再3分钟内！
+     * @param deviceId
+     * @return
+     */
+    DeviceLog getDeviceLogsByIdOne(Integer deviceId);
 }

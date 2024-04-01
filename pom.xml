@@ -16,7 +16,7 @@
     <name>JIMO_IOT</name>
     <description>JIMO_IOT</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -37,37 +37,35 @@
             <version>2.2.3</version>
             <classifier>jdk15</classifier>
         </dependency>
-
         <!--thymeleaf-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
-        <!--mybatis plus-->
+          <!--mybatis plus-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.4.2</version>
         </dependency>
-        <dependency>
-            <!--Mapper&Bean自动生成器-->
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.4.1</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            &lt;!&ndash;Mapper&Bean自动生成器&ndash;&gt;-->
+<!--            <groupId>com.baomidou</groupId>-->
+<!--            <artifactId>mybatis-plus-generator</artifactId>-->
+<!--            <version>3.4.1</version>-->
+<!--        </dependency>-->
         <!-- freemarker模板引擎 mybatis-plus代码生成器需要 -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>2.3.31</version>
         </dependency>
-        <dependency>
-            <!--分页工具-->
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <version>5.1.11</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            &lt;!&ndash;分页工具&ndash;&gt;-->
+<!--            <groupId>com.github.pagehelper</groupId>-->
+<!--            <artifactId>pagehelper</artifactId>-->
+<!--            <version>5.1.11</version>-->
+<!--        </dependency>-->
         <dependency>
             <!--日志-->
             <groupId>log4j</groupId>
@@ -110,12 +108,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <!--测试使用-->
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            &lt;!&ndash;测试使用&ndash;&gt;-->
+<!--            <groupId>junit</groupId>-->
+<!--            <artifactId>junit</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

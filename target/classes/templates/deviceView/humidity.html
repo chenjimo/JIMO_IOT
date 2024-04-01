@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>温湿度记录页面</title>
+    <title>室内湿度记录页面</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
@@ -65,7 +65,7 @@
             data: {
                 labels: [],
                 datasets: [{
-                    label: '实时湿度（%RH）',
+                    label: '室内实时湿度（%RH）',
                     data: [],
                     borderColor: 'rgb(194,106,237)',
                     tension: 0.1,
@@ -102,8 +102,8 @@
         var chart = createChart();
         $.ajax({
             type: "get",
-            url: "/device/log",
-            data: "deviceId=2",
+            url: "/device/logs",
+            data: "deviceId=10&jt=20",
             async: false,
             success: function (data) {
                 jsonData = data;
@@ -117,15 +117,15 @@
             // 模拟的 Ajax 请求获取实时数据
             $.ajax({
                 type: "get",
-                url: "/device/log",
-                data: "deviceId=2",
+                url: "/device/logs",
+                data: "deviceId=10&jt=20",
                 async: false,
                 success: function (data) {
                     jsonData = data;
                     updateChart(chart);
                 }
             });
-        }, 5000); // 5000毫秒（即5秒）更新一次数据
+        }, 20000); // 5000毫秒（即5秒）更新一次数据
     });
 </script>
 </body>

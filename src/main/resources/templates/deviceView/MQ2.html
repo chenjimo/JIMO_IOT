@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>温湿度记录页面</title>
+    <title>室内空气指令记录页面</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
@@ -43,7 +43,6 @@
     // 模拟的 Ajax 返回数据
     var jsonData = [];
 
-
     // 准备数据
     function prepareData() {
         const labels = jsonData.map(function (item) {
@@ -65,7 +64,7 @@
             data: {
                 labels: [],
                 datasets: [{
-                    label: '实时空气质量',
+                    label: '室内实时空气质量',
                     data: [],
                     borderColor: 'rgb(1,25,247)',
                     tension: 0.1,
@@ -102,8 +101,8 @@
         var chart = createChart();
         $.ajax({
             type: "get",
-            url: "/device/log",
-            data: "deviceId=3",
+            url: "/device/logs",
+            data: "deviceId=3&jt=20",
             async: false,
             success: function (data) {
                 jsonData = data;
@@ -117,15 +116,15 @@
             // 模拟的 Ajax 请求获取实时数据
             $.ajax({
                 type: "get",
-                url: "/device/log",
-                data: "deviceId=3",
+                url: "/device/logs",
+                data: "deviceId=3&jt=20",
                 async: false,
                 success: function (data) {
                     jsonData = data;
                     updateChart(chart);
                 }
             });
-        }, 5000); // 5000毫秒（即5秒）更新一次数据
+        },20000); // 5000毫秒（即5秒）更新一次数据
     });
 </script>
 </body>

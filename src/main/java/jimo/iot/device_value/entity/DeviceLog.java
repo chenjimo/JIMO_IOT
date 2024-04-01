@@ -9,7 +9,7 @@ import lombok.Data;
 
 /**
  * <p>
- *  传感器的数据上传位置
+ * 传感器的数据上传位置
  * </p>
  *
  * @author JIMO
@@ -38,43 +38,4 @@ public class DeviceLog implements Serializable {
         this.bz = bz;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(Integer deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    public String getBz() {
-        return bz;
-    }
-
-    public void setBz(String bz) {
-        this.bz = bz;
-    }
 }

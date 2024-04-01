@@ -5,15 +5,19 @@ import jimo.iot.ctrl_module.entity.OderLog;
 import jimo.iot.ctrl_module.mapper.OderLogMapper;
 import jimo.iot.ctrl_module.service.IOderLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jimo.iot.info.send.SendEmail;
+import jimo.iot.util.APIUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author JIMO
@@ -21,6 +25,8 @@ import java.util.List;
  */
 @Service
 public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> implements IOderLogService {
+    @Resource
+    SendEmail sendEmail;
 
     /***
      * 写入控制记录
@@ -29,7 +35,7 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
      */
     @Override
     public boolean writeLog(OderLog oderLog) {
-        return baseMapper.insert(oderLog)>0;
+        return baseMapper.insert(oderLog) > 0;
     }
 
     /***
@@ -44,9 +50,9 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
                 .eq(OderLog::getModuleId, moduleId)
                 .eq(OderLog::getStatus, 0)//等待执行的状态
                 .isNull(OderLog::getReadTime)//指令暂未被读取
-                .le(OderLog::getWriteTime,now) // 小于等于当前时间
+                .le(OderLog::getWriteTime, now) // 小于等于当前时间
                 .orderByAsc(OderLog::getWriteTime));//按升序排列先查最早的数据
-        if (oderLog != null){
+        if (oderLog != null) {
             baseMapper.updateById(new OderLog(oderLog.getId(), now));
         }
         return oderLog;
@@ -54,13 +60,28 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
 
     /***
      * 根据执行的指令记录ID进行更新status
-     * @param oderLogId
-     * @param status
-     * @return
+     * @author JIMO
+     * @since 2024-03-31
      */
     @Override
     public boolean updateLog(Integer oderLogId, Integer status) {
-        return baseMapper.updateById(new OderLog(oderLogId, status)) > 0;
+        String Bz = "test";
+        switch (status) {
+            case 4:
+                sendEmail.alterEmail("智能浇水模块", "在您下发的远程浇水水任务中，检测到水仓水量不足！建议您及时补水！", LocalDateTime.now());
+                status = 2;//属于执行失败的那一类型
+                Bz = "水仓缺水-已邮箱提示！";
+                break;
+            case 3:
+                Bz = "土壤湿度很低无需浇水！";
+                status = 1;
+                break;
+            case 5:
+                Bz = "状态无需改变！";
+                status = 1;
+                break;
+        }
+        return baseMapper.updateById(new OderLog(oderLogId, status, Bz)) > 0;
     }
 
     /***
@@ -72,21 +93,43 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
      * @return
      */
     @Override
-    public List<OderLog> getLogs(boolean isReadOrder, Integer status) {
+    public List<OderLog> getLogs(boolean isReadOrder, Integer status, Integer limit) {
+
         List<OderLog> oderLogs = new ArrayList<OderLog>();
-        if (isReadOrder){//表示查询模块已经度过数据的记录（status执行中0、执行成功1、与执行失败2）
-            oderLogs = baseMapper.selectList(
-                    Wrappers.<OderLog>lambdaQuery()
-                            .eq(OderLog::getStatus, status)
-                            .isNotNull(OderLog::getReadTime)
-                            .orderByDesc(OderLog::getWriteTime)
-            );
-        }else {//表示查询模块还未读取数据的记录（status等待中0、撤销-1）
-            oderLogs = baseMapper.selectList(
-                    Wrappers.<OderLog>lambdaQuery()
-                            .eq(OderLog::getStatus, status)
-                            .isNull(OderLog::getReadTime)
-                            .orderByDesc(OderLog::getWriteTime));
+        if (isReadOrder) {//表示查询模块已经度过数据的记录（status执行中0、执行成功1、与执行失败2）
+            if (limit == null || limit <= 0) {
+                oderLogs = baseMapper.selectList(
+                        Wrappers.<OderLog>lambdaQuery()
+                                .eq(OderLog::getStatus, status)
+                                .isNotNull(OderLog::getReadTime)
+                                .orderByDesc(OderLog::getWriteTime)
+                );
+            } else {
+                oderLogs = baseMapper.selectList(
+                        Wrappers.<OderLog>lambdaQuery()
+                                .eq(OderLog::getStatus, status)
+                                .isNotNull(OderLog::getReadTime)
+                                .orderByDesc(OderLog::getWriteTime)
+                                .last("LIMIT " + limit)
+                );
+            }
+        } else {//表示查询模块还未读取数据的记录（status等待中0、撤销-1）
+            if (limit == null || limit <= 0) {
+                oderLogs = baseMapper.selectList(
+                        Wrappers.<OderLog>lambdaQuery()
+                                .eq(OderLog::getStatus, status)
+                                .isNull(OderLog::getReadTime)
+                                .orderByDesc(OderLog::getWriteTime));
+            } else {
+                oderLogs = baseMapper.selectList(
+                        Wrappers.<OderLog>lambdaQuery()
+                                .eq(OderLog::getStatus, status)
+                                .isNull(OderLog::getReadTime)
+                                .orderByDesc(OderLog::getWriteTime)
+                                .last("LIMIT " + limit)
+                );
+            }
+
         }
         return oderLogs;
     }
@@ -98,13 +141,13 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
      */
     @Override
     public Integer isUpdate(Integer oderLogId) {
-        int idUpa  = 4;
+        int idUpa = 4;
         OderLog oderLog = baseMapper.selectById(oderLogId);
-        if (oderLog != null){
-            if (oderLog.getReadTime()!=null){//这里已经表示不可以在进行撤回了
+        if (oderLog != null) {
+            if (oderLog.getReadTime() != null) {//这里已经表示不可以在进行撤回了
                 Integer status = oderLog.getStatus();
-                idUpa = status==-1?4:status==0?1:status==1?2:status==2?3:4;
-            }else {
+                idUpa = status == -1 ? 4 : status == 0 ? 1 : status == 1 ? 2 : status == 2 ? 3 : 4;
+            } else {
                 idUpa = 0;
             }
         }

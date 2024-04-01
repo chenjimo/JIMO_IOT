@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JIMO-IOT-等待执行的指令数据</title>
+    <link rel="shortcut icon" href="//jimo.fun/img/my/jm.png"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #eeeeee;
+            font-family: "楷体";
+        }
+
+        .item {
+            margin: 20px;
+            margin-bottom: 50px;
+        }
+
+        .imte_top {
+            text-align: center;
+        }
+
+        .imte_top > span {
+            font-size: 14px;
+            display: inline-block;
+            padding: 5px 12px;
+            background-color: #ddd;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .item_content {
+            background-color: #fff;
+            padding: 25px 15px;
+            margin-top: 6px;
+        }
+
+        .item_content_top_1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .item_content_top_2 {
+            color: #eee;
+            font-size: 14px;
+            margin: 5px 0px;
+        }
+
+        .item_content_top_3 {
+            margin: 10px 0px;
+        }
+
+        .item_content_top_4 {
+            margin: 10px 0px;
+        }
+
+        .item_content_bottom > a {
+            text-decoration: none;
+            color: #33e;
+        }
+
+        .submitBtn {
+            width: 90%;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 46px;
+            border-radius: 23px;
+            background: #1f72ff;
+            color: #fff;
+            font-weight: bolder;
+        }
+
+        .background-image {
+            /*width: 100%; !* 设置 div 的宽度 *!*/
+            height: 1200px; /* 设置 div 的高度 */
+            background-image: url('../../static/img/img.png'); /* 设置背景图片的路径 */
+            background-size: cover; /* 背景图片大小适应div，并保持比例 */
+            background-position: center; /* 背景图片在 div 中居中显示 */
+            background-repeat: no-repeat; /* 禁止背景图片重复显示 */
+        }
+
+        /* 定义滚动条的宽度、颜色和圆角 */
+        ::-webkit-scrollbar {
+            width: 8px; /* 宽度 */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #4285f4; /* 滑块颜色 */
+            border-radius: 4px; /* 圆角 */
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #f1f1f1; /* 背景颜色 */
+        }
+
+        /* 鼠标悬停在滚动条上时的样式 */
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #333; /* 滑块颜色变化 */
+        }
+
+        /* Firefox 滚动条样式 */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #4285f4 #f1f1f1;
+        }
+
+        body::-webkit-scrollbar-corner {
+            background-color: #f1f1f1;
+        }
+
+    </style>
+</head>
+<body class="background-image ">
+<br>
+<div class="content" id="dataTable1">
+    <h1 align="center">%%%暂无等待执行的指令数据%%%</h1>
+</div>
+</body>
+<script src="../../static/js/jquery.min.js"></script>
+<!--<script src="//code.jquery.com/jquery-3.6.4.min.js"></script>-->
+<script src="../../static/layer/layer.js"></script>
+<script>
+    function deleteByID(id) {
+        layer.confirm("请您谨慎操作！确定要撤销该指令吗？💔",
+            {btn: ['我心已决！', '再想想']}, function () {
+                $.post("/oder/logs", {oderLogId: id}, function (data) {
+                    layer.msg(data.result);
+                    // window.location.href = "/templates/controller/index.html";
+                });
+            }, function () {
+                layer.msg("已成功取消！");
+            }
+        );
+    }
+
+    $(function () {
+        //等待执行的命令
+        $.get("/oder/logs", {isReadTime: false, status: 0}, function (data) {
+            if (data.status !== 200) {
+                layer.msg("系统异常请重新尝试！");
+                return;
+            }
+            var data1 = data.data;
+            if (data1 !== null) {
+                $("#dataTable1").html("");
+                for (i = 0; i < data1.length; i++) {
+                    var item = "<div class=\"item\">\n" +
+                        "\t\t\t<div class=\"imte_top\" style=\"color:#0eb1d0\"><span>" + data1[i].writeTime + "</span></div>\n" +
+                        "\t\t\t<div class=\"item_content\">\n" +
+                        "\t\t\t\t<div class=\"item_content_top\">\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_1\" style=\"color:#74ef32\">正在等待执行的指令!</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_2\" style=\"color:#d08c0e\">" + data1[i].writeTime + "</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_3\">该指令的名字为:" + data1[i].oderName + "</div>\n" +
+                        "\t\t\t\t\t<div class=\"item_content_top_4\">\n" +
+                        "\t\t\t\t\t\t该指令的下发模块为:<span style=\"color:#05a\">" + data1[i].moduleName + "</span><br>\n" +
+                        "\t\t\t\t\t\t该指令的下发用户为:" + data1[i].userName + "<br>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</div>\n" +
+                        "\t\t\t\t<hr>\n" +
+                        "\t\t\t\t<div class=\"item_content_bottom\">\n" +
+                        "\t\t\t\t\t<a type=\"button\" onclick='deleteByID(" + data1[i].id + ")'>撤销该指令！</a>\n" +
+                        "\t\t\t\t</div>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("#dataTable1").append(item);
+                }
+            }
+        });
+
+    });
+
+</script>

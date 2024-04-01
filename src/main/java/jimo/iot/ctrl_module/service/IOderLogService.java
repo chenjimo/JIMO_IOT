@@ -47,7 +47,7 @@ public interface IOderLogService extends IService<OderLog> {
      * @param status
      * @return
      */
-    public List<OderLog> getLogs(boolean isReadOrder,Integer status);
+    public List<OderLog> getLogs(boolean isReadOrder,Integer status,Integer limit);
 
     /***
      * 根据status和ReadTime分类为等待中(0)、执行中(1)、执行成功(2)、与执行失败(3),判断是否可以撤销这条指令！

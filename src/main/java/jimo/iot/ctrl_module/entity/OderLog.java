@@ -71,6 +71,11 @@ public class OderLog implements Serializable {
         this.id = id;
         this.status = status;
     }
+    public OderLog(Integer id, Integer status,String bz) {
+        this.id = id;
+        this.status = status;
+        this.bz = bz;
+    }
 
     public OderLog(Integer id, LocalDateTime readTime) {
         this.id = id;

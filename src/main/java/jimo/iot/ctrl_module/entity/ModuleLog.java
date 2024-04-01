@@ -34,36 +34,4 @@ public class ModuleLog implements Serializable {
         this.time = time;
         this.bz = bz;
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getModuleId() {
-        return moduleId;
-    }
-
-    public void setModuleId(Integer moduleId) {
-        this.moduleId = moduleId;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    public String getBz() {
-        return bz;
-    }
-
-    public void setBz(String bz) {
-        this.bz = bz;
-    }
 }

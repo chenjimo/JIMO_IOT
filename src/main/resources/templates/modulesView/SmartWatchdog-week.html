@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智能门窗（安防）模块记录页面</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<style>
+    /* 定义滚动条的宽度、颜色和圆角 */
+    ::-webkit-scrollbar {
+        width: 8px; /* 宽度 */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(245, 99, 111, 0.57); /* 滑块颜色 */
+        border-radius: 4px; /* 圆角 */
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: rgba(210, 199, 134, 0.2); /* 背景颜色 */
+    }
+
+    /* 鼠标悬停在滚动条上时的样式 */
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #333; /* 滑块颜色变化 */
+    }
+
+    /* Firefox 滚动条样式 */
+    html {
+        scrollbar-width: thin;
+        scrollbar-color: #42f1f4 #f1f1f1;
+    }
+
+    body::-webkit-scrollbar-corner {
+        background-color: #f1f1f1;
+    }
+
+</style>
+<body>
+<canvas id="Temp_LineChart"></canvas>
+
+<script>
+    // 创建折线图
+    function createChart() {
+        var ctx = document.getElementById('Temp_LineChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '烟雾指标',
+                    data: [],
+                    borderColor: 'rgb(128, 0, 128)',
+                    tension: 0.1,
+                },
+                    {
+                        label: '空气质量',
+                        data: [],
+                        borderColor: 'rgb(252, 160, 0)',
+                        tension: 0.1
+                    },
+                    {
+                        label: '室外温度',
+                        data: [],
+                        borderColor: 'rgb(255, 0, 168)',
+                        tension: 0.1
+                    },
+                    {
+                        label: '室内温度',
+                        data: [],
+                        borderColor: 'rgb(255, 0, 0)',
+                        tension: 0.1
+                    },
+                    {
+                        label: '室内湿度(%RH)',
+                        data: [],
+                        borderColor: 'rgb(54, 162, 235)',
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'linear',
+                        position: 'bottom'
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            min: 0
+                        }
+                    }]
+                }
+            }
+        });
+        return chart;
+    }
+
+    // 更新图表数据和重新绘制
+    function updateChart(chart, labels, values1, values2, values3, values4, values5) {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = values1;
+        chart.data.datasets[1].data = values2;
+        chart.data.datasets[2].data = values3;
+        chart.data.datasets[3].data = values4;
+        chart.data.datasets[4].data = values5;
+        chart.update();
+    }
+
+    // 页面加载时创建图表并更新
+    $(document).ready(function () {
+        var chart = createChart();
+        // 发起五个数据请求
+        $.ajax({
+            type: "get",
+            url: "/device/logs/avg",
+            data: "deviceId=3&jt=168&avg=1",
+            success: function (data1) {
+                $.ajax({
+                    type: "get",
+                    url: "/device/logs/avg",
+                    data: "deviceId=6&jt=168&avg=1",
+                    success: function (data2) {
+                        $.ajax({
+                            type: "get",
+                            url: "/device/logs/avg",
+                            data: "deviceId=1&jt=168&avg=1",
+                            success: function (data3) {
+                                $.ajax({
+                                    type: "get",
+                                    url: "/device/logs/avg",
+                                    data: "deviceId=7&jt=168&avg=1",
+                                    success: function (data4) {
+                                        $.ajax({
+                                            type: "get",
+                                            url: "/device/logs/avg",
+                                            data: "deviceId=10&jt=168&avg=1",
+                                            success: function (data5) {
+                                                const {labels, values1} = processData1(data1);
+                                                const {values2} = processData2(data2);
+                                                const {values3} = processData3(data3);
+                                                const {values4} = processData4(data4);
+                                                const {values5} = processData5(data5);
+                                                updateChart(chart, labels, values1, values2, values3, values4, values5);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
+        // 定时获取数据并更新图表
+        setInterval(function () {
+            $.ajax({
+                type: "get",
+                url: "/device/logs/avg",
+                data: "deviceId=3&jt=168&avg=1",
+                success: function (data1) {
+                    $.ajax({
+                        type: "get",
+                        url: "/device/logs/avg",
+                        data: "deviceId=6&jt=168&avg=1",
+                        success: function (data2) {
+                            $.ajax({
+                                type: "get",
+                                url: "/device/logs/avg",
+                                data: "deviceId=1&jt=168&avg=1",
+                                success: function (data3) {
+                                    $.ajax({
+                                        type: "get",
+                                        url: "/device/logs/avg",
+                                        data: "deviceId=7&jt=168&avg=1",
+                                        success: function (data4) {
+                                            $.ajax({
+                                                type: "get",
+                                                url: "/device/logs/avg",
+                                                data: "deviceId=10&jt=168&avg=1",
+                                                success: function (data5) {
+                                                    const {labels, values1} = processData1(data1);
+                                                    const {values2} = processData2(data2);
+                                                    const {values3} = processData3(data3);
+                                                    const {values4} = processData4(data4);
+                                                    const {values5} = processData5(data5);
+                                                    updateChart(chart, labels, values1, values2, values3, values4, values5);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }, 20000); // 20秒更新一次数据
+    });
+
+    function processData1(data) {
+        var labels = [];
+        var values = [];
+        data.forEach(function (item) {
+            labels.push(item.hour);
+            values.push(item.average_value);
+        });
+        return {labels: labels, values1: values};
+    }
+
+    function processData2(data) {
+        var values = data.map(function (item) {
+            return item.average_value;
+        });
+        return {values2: values};
+    }
+
+    function processData3(data) {
+        var values = data.map(function (item) {
+            return item.average_value;
+        });
+        return {values3: values};
+    }
+
+    function processData4(data) {
+        var values = data.map(function (item) {
+            return item.average_value;
+        });
+        return {values4: values};
+    }
+
+    function processData5(data) {
+        var values = data.map(function (item) {
+            return item.average_value;
+        });
+        return {values5: values};
+    }
+
+</script>
+</body>
+</html>

@@ -78,15 +78,34 @@ public class OderLogController {
     }
 
     /***
-     * （根据status和ReadTime分类为等待中、执行中、执行成功、与执行失败、已撤销）
-     * isReadTime=true示查询模块已经度过数据的记录（status执行中0、执行成功1、与执行失败2）
+     * （根据status和ReadTime分类为等待中、执行中、执行成功、与执行失败、已撤销、其他执行结果状态回馈。）
+     * isReadTime=true示查询模块已经度过数据的记录（status执行中0、执行成功1-3-5、与执行失败2-4（邮箱提示4））
      * isReadTime=false示查询模块还未读取数据的记录（status等待中0、撤销-1）
      * @return
      */
     @GetMapping("/logs")
     public Message getLogs(boolean isReadTime,Integer status){
         List logs = new ArrayList<OderLog>();
-                oderLogService.getLogs(isReadTime, status).forEach(
+                oderLogService.getLogs(isReadTime, status,null).forEach(
+                oderLog -> {
+                    oderLog.setOderName(oderMessageService.readOderMessage(oderLog.getOderId()).getName());
+                    oderLog.setUserName(userMessageService.getUserMessage(oderLog.getUserId()).getName());
+                    oderLog.setModuleName(moduleMessageService.getModuleMessage(oderLog.getModuleId()).getName());
+                    logs.add(oderLog);
+                }
+        );
+        return new Message(200,success,logs);
+    }
+    /***
+     * （根据status和ReadTime分类为等待中、执行中、执行成功、与执行失败、已撤销、其他执行结果状态回馈。）
+     * isReadTime=true示查询模块已经度过数据的记录（status执行中0、执行成功1-3-5、与执行失败2-4（邮箱提示4））
+     * isReadTime=false示查询模块还未读取数据的记录（status等待中0、撤销-1）
+     * @return 一个经过分页后的数据处理
+     */
+    @GetMapping("/logs/limit")
+    public Message getLogsLimit(boolean isReadTime,Integer status,Integer limitNum){
+        List logs = new ArrayList<OderLog>();
+        oderLogService.getLogs(isReadTime, status,limitNum).forEach(
                 oderLog -> {
                     oderLog.setOderName(oderMessageService.readOderMessage(oderLog.getOderId()).getName());
                     oderLog.setUserName(userMessageService.getUserMessage(oderLog.getUserId()).getName());

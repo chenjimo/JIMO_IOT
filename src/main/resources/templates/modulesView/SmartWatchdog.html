@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="http://jimo.fun/img/my/jm.png">
+  <title>Smart_Watchdog-家庭控制台</title>
+  <!-- 引入Chart.js库 -->
+  <script src="https://cdn.staticfile.org/Chart.js/3.9.1/chart.js"></script>
+  <!--layui.js-->
+  <script src="https://www.layuicdn.com/layui/layui.js"></script>
+  <!--layui.css-->
+  <script src="https://www.layuicdn.com/layui/css/layui.css"></script>
+</head>
+<style>
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .status {
+    font-size: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: rgb(255, 115, 0);
+  }
+
+  .modelV {
+    font-size: 21px;
+    font-weight: bold;
+    color: #fc0404;
+  }
+
+  /* 让后两个 p 并排显示 */
+  .status p:nth-child(2),
+  .status p:nth-child(3) {
+    display: inline-block;
+    margin-left: 20px;
+    /* 调整间距 */
+  }
+
+  #WaterStatus,
+  #SpinStatus {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: #c903fa;
+  }
+
+  #oderMessage {
+    font-size: 16px;
+    font-weight: bold;
+    color: #e31dfd;
+    /* 设置选择框文本颜色 */
+    background-color: #a0c0c5;
+    /* 设置选择框背景色 */
+    border-radius: 5px;
+    padding: 5px;
+  }
+
+  /* 自动模式的字体颜色为蓝色 */
+  .option1 {
+    color: rgb(247, 203, 10);
+  }
+
+  /* 智能模式的字体颜色为绿色 */
+  .option2 {
+    color: rgb(14, 255, 54);
+  }
+
+  /* 严防模式的字体颜色为红色 */
+  .option3 {
+    color: red;
+  }
+
+  .health {
+    height: 60vh;
+    width: 97%;
+    margin-left: 1.5%;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-top-width: 0px;
+    margin-top: 1.5vh;
+    /*background-image: url("../../../img/qin.png");
+    background-position: 50% 50%;*/
+    -webkit-transition: -webkit-transform 0.25s;
+    transition: transform 0.25s;
+    opacity: 1;
+  }
+</style>
+
+<body>
+<h1>智能门窗（安防）模块状态监视</h1>
+<a href="http://iot.jimo.fun/" target="_blank">
+  <button>返回JIMO-IOT首页</button>
+</a>
+<button onclick="changePage(1)">最近一周情况</button>
+<button onclick="changePage(2)">最近三个月情况</button>
+<button onclick="changePage(3)">全部情况</button>
+<!-- 创建一个Canvas元素用于显示图表 -->
+<div id="htmlBody">
+  <iframe id="embeddedPage" class="health" src="/templates/modulesView/SmartWatchdog-week.html"></iframe>
+</div>
+<!-- 当前门和窗的状态显示 -->
+<div>
+  <div class="status">
+    <p class="modelV">当前设备模式: <span id="modeStatus">正在获取...</span></p>
+    <p>当前窗户的状态: <span id="windowStatus">正在获取...</span></p>
+    <p>当前门的状态: <span id="doorStatus">正在获取...</span></p>
+  </div>
+</div>
+<!-- <button onclick="startWatering()">点我-洒洒水呀(●'◡'●)！</button> -->
+
+<a href="/templates/controller/setOder.html">
+  <button>下发控制指令(●'◡'●)！</button>
+</a>
+
+<script>
+
+  function updateData() {
+    // 从服务器获取数据
+    fetch('/device/log/moduleId?id=3')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('响应异常，请重试！！！');
+              }
+              return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+              // 假设 dataFromServer 是包含 JSON 字符串的变量
+              var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+              //更新门窗状态
+              var w = document.getElementById('windowStatus');
+              var d = document.getElementById('doorStatus');
+              var m = document.getElementById('modeStatus');
+              if (jsonObject.status == "200") {
+                //更新门窗状态
+                var s = jsonObject.data.DoorStatus;
+                if (s == "00" || s == "01" || s == "02") {
+                  w.innerHTML = "<span style='color: rgb(0, 68, 255);'>已关闭</span>";
+                } else if (s == "10" || s == "11" || s == "12") {
+                  w.innerHTML = "<span style='color: rgb(255, 154, 0);'>大开中</span>";
+                } else if (s == "20" || s == "21" || s == "22") {
+                  w.innerHTML = "<span style='color: rgb(0, 255, 171);'>半开中</span>";
+                }
+                if (s == "10" || s == "20" || s == "00") {
+                  d.innerHTML = "<span style='color: rgb(0, 68, 255);'>已关闭</span>";
+                } else if (s == "11" || s == "21" || s == "01") {
+                  d.innerHTML = "<span style='color: rgb(255, 154, 0);'>大开中</span>";
+                } else if (s == "12" || s == "22" || s == "02") {
+                  d.innerHTML = "<span style='color: rgb(0, 255, 171);'>半开中</span>";
+                }
+                //更新模式状态
+                switch (parseInt(jsonObject.data.pattern)) {
+                  case 0:
+                    m.innerHTML = "<span style='color: rgb(255, 212, 0);'>自动模式</span>";
+                    break;
+                  case 1:
+                    m.innerHTML = "<span style='color: rgb(0, 161, 255);'>智能模式</span>";
+                    break;
+                  case 2:
+                    m.innerHTML = "<span style='color: rgb(255, 68, 0);'>严防模式</span>";
+                    break;
+                  default:
+                    m.innerHTML = "<span style='color: rgb(255, 0, 229);'>更新失败！</span>";
+                }
+              } else {
+                w.innerHTML = "<span style='color: rgb(177,0,252);'>设备未上线！</span>";
+                d.innerHTML = "<span style='color: rgb(177,0,252);'>设备未上线！</span>";
+                m.innerHTML = "<span style='color: rgb(177,0,252);'>设备未上线！</span>";
+              }
+
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              layer.msg('网络响应异常，亲，请你检查设备是否在线！（绿灯亮为在线）');
+            });
+  }
+
+  function changePage(pageType) {
+    var iframe = document.getElementById("embeddedPage");
+    switch (pageType) {
+      case 1:
+        iframe.src = "/templates/modulesView/SmartWatchdog-week.html";
+        break;
+      case 2:
+        iframe.src = "/templates/modulesView/SmartWatchdog-mouth.html";
+        break;
+      case 3:
+        iframe.src = "/templates/modulesView/SmartWatchdog-all.html";
+        break;
+      default:
+        break;
+    }
+  }
+
+  // 启动定时器，每秒更新数据
+  intervalId = setInterval(updateData, 3000);
+
+</script>
+</body>
+
+</html>

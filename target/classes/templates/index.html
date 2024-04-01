@@ -85,17 +85,40 @@
         body::-webkit-scrollbar-corner {
             background-color: #f1f1f1;
         }
-
+        .aId {
+            display: inline-block;
+            font-size: 18px;
+            padding: 10px 18px;
+            background-color: #dd92e8;
+            color: #03ff11;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid #9911e7;
+        }
     </style>
   </head>
 <body class="background-image">
 <div class="container ">
-    <iframe src="/templates/deviceView/temp.html"  frameborder="no" allowfullscreen="true"></iframe>
-    <iframe src="/templates/deviceView/humidity.html" frameborder="no" allowfullscreen="true"></iframe>
-    <iframe src="/templates/deviceView/MQ2.html"  frameborder="no" allowfullscreen="true"></iframe>
+    <iframe src="/templates/deviceView/temp.html"  frameborder="no" allowfullscreen="true"></iframe><!--室内温度-->
+    <iframe src="/templates/deviceView/humidity.html" frameborder="no" allowfullscreen="true"></iframe><!--//室内湿度-->
+    <iframe src="/templates/deviceView/MQ2.html"  frameborder="no" allowfullscreen="true"></iframe><!--室内空气质量-->
+
     <iframe src="/templates/controller/index.html" frameborder="no" allowfullscreen="true"></iframe>
-    <a href="/templates/controller/index.html">GOTO ---》》》JIMO-IOT 控制中心！！！ </a>
-    <a href="/module/messages">GOTO ---》》》JIMO-IOT 模块中心-查看模块状态！！！ </a>
+    <div style="text-align: center;">
+        <a href="/templates/modulesView/SmartRack.html" class="aId">点击-查看“智能晾衣架”模块状态！</a>
+    </div>
+    <div style="text-align: center;">
+        <a href="/templates/modulesView/SmartWatering.html" class="aId">点击-查看“智能浇水”模块状态！</a>
+    </div>
+    <div style="text-align: center;">
+        <a href="/templates/modulesView/SmartWatchdog.html" class="aId">点击-查看“智能门窗（安防）”模块状态！</a>
+    </div>
+    <div style="text-align: center;">
+        <a href="/templates/controller/index.html" class="aId">GOTO ---》》》JIMO-IOT 控制中心！！！ </a>
+    </div>
+    <div style="text-align: center;">
+        <a href="/module/messages" class="aId">GOTO ---》》》JIMO-IOT 模块中心-查看模块状态！！！ </a>
+    </div>
 </div>
 </body>
 </html>
