@@ -108,6 +108,9 @@
 
 <body>
 <h1>智能晾衣架模块状态监视</h1>
+<div class="status">
+    <p class="option2">设备在线状态: <span id="timeStatus">正在获取...</span></p>
+</div>
 <a href="http://iot.jimo.fun/" target="_blank">
     <button>返回JIMO-IOT首页</button>
 </a>
@@ -125,7 +128,9 @@
         <p>当前是否有雨: <span id="WaterStatus">正在获取...</span></p>
         <p>当前智能晾晒模式: <span id="SpinStatus">正在获取...</span></p>
         <p class="modelV">当前衣架旋转角度: <span id="rackStatus">正在获取...</span></p>
+        <p>最近一次下发指令: <span id="oderStatus">正在获取...</span></p>
     </div>
+
 </div>
 <!-- <button onclick="startWatering()">点我-洒洒水呀(●'◡'●)！</button> -->
 
@@ -134,7 +139,8 @@
 </a>
 
 <script>
-
+    <!-- 在页面加载完成时执行一次 API 请求 -->
+    document.addEventListener('DOMContentLoaded',updateData());
     function updateData() {
         // 从服务器获取数据
         fetch('/device/log/moduleId?id=1')
@@ -194,6 +200,56 @@
                 console.error('Error:', error);
                 layer.msg('网络响应异常，亲，请你检查设备是否在线！（绿灯亮为在线）');
             });
+        // 从服务器获取数据-刷新最近一次浇水情况
+        fetch('/oder/log/moduleId?moduleId=1')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('响应异常，请重试！！！');
+                }
+                return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+                // 假设 dataFromServer 是包含 JSON 字符串的变量
+                var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+                //更新门窗状态
+                var w = document.getElementById('oderStatus');
+                if (jsonObject.status == "200") {
+                    //更新模式状态
+                    w.innerHTML = "<span style='color: rgb(0, 161, 255);'>"+jsonObject.data+"</span>";
+                } else {
+                    m.innerHTML = "<span style='color: rgb(177,0,252);'>"+jsonObject.data+"</span>";
+                }
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                layer.msg('网络响应异常，亲，请你检查设备是否在线！（绿灯亮为在线）');
+            });
+        // 从服务器获取数据-刷新设备在线状态
+        fetch('/module/times?moduleId=1')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('响应异常，请重试！！！');
+                }
+                return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+                // 假设 dataFromServer 是包含 JSON 字符串的变量
+                var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+                //更新门窗状态
+                var t = document.getElementById('timeStatus');
+                if (jsonObject.status == "200") {
+                    //更新模式状态
+                    t.innerHTML = "<span style='color: rgb(0, 161, 255);'>"+jsonObject.data+"</span>";
+                } else {
+                    t.innerHTML = "<span style='color: rgb(177,0,252);'>暂无该设备记录！</span>";
+                }
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                layer.msg('网络响应异常，亲，请你检查设备是否在线！（绿灯亮为在线）');
+            });
     }
 
     function changePage(pageType) {
@@ -214,7 +270,7 @@
     }
 
     // 启动定时器，每秒更新数据
-    intervalId = setInterval(updateData, 3000);
+    intervalId = setInterval(updateData, 5000);
 
 </script>
 </body>

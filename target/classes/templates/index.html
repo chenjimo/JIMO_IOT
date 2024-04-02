@@ -42,16 +42,23 @@
             }
         }
 
-        /* 第四个页面占整个屏幕宽度的60% */
+        /* 默认样式，适用于较大的屏幕，如电脑 */
         .container iframe:nth-child(4) {
-            flex: 0 0 90%;
-            width: 90%;
-            height: 730px;
-            margin: auto; /* 在水平方向上居中 */
+            flex: 0 0 90%; /* 使用 flex 属性来设置宽度 */
+            height: 950px;
+            margin: auto; /* 水平居中 */
+        }
+
+        /* 媒体查询，适用于较小的屏幕，如手机 */
+        @media (max-width: 768px) { /* 这里可以根据需要调整阈值 */
+            .container iframe:nth-child(4) {
+                flex: 0 0 90%; /* 在小屏幕上，让 iframe 占据全部宽度 */
+                height: auto; /* 可以根据内容自适应高度，或者设置具体的高度 */
+            }
         }
         .background-image {
             /*width: 100%; !* 设置 div 的宽度 *!*/
-            height: 1000px; /* 设置 div 的高度 */
+            height: 200%; /* 设置 div 的高度 */
             background-image: url('../static/img/img_1.png'); /* 设置背景图片的路径 */
             background-size: cover; /* 背景图片大小适应div，并保持比例 */
             background-position: center; /* 背景图片在 div 中居中显示 */
@@ -117,7 +124,7 @@
         <a href="/templates/controller/index.html" class="aId">GOTO ---》》》JIMO-IOT 控制中心！！！ </a>
     </div>
     <div style="text-align: center;">
-        <a href="/module/messages" class="aId">GOTO ---》》》JIMO-IOT 模块中心-查看模块状态！！！ </a>
+        <a href="/templates/modules/modules.html" class="aId">GOTO ---》》》JIMO-IOT 模块中心-查看模块状态！！！ </a>
     </div>
 </div>
 </body>

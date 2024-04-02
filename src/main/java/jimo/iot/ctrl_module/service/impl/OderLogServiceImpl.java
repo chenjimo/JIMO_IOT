@@ -153,4 +153,25 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
         }
         return idUpa;
     }
+
+    /***
+     * 根据模块ID获取对应的指令信息，根据指令记录的写入时间降序读取，仅读取不做其他任何操作！
+     * @param moduleId
+     * @param jt 要最新的几条
+     * @return
+     */
+    @Override
+    public List<OderLog> getOderByModuleId(Integer moduleId, Integer jt) {
+        //jt小于零则代表获取全部数据
+        if (jt < 0) {
+            return baseMapper.selectList(Wrappers.<OderLog>lambdaQuery()
+                    .eq(OderLog::getModuleId, moduleId)
+                    .orderByDesc(OderLog::getWriteTime));
+        } else {
+            return baseMapper.selectList(Wrappers.<OderLog>lambdaQuery()
+                    .eq(OderLog::getModuleId, moduleId)
+                    .orderByDesc(OderLog::getWriteTime)
+                    .last("LIMIT " + jt));
+        }
+    }
 }

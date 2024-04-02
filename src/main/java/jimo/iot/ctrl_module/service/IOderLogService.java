@@ -24,14 +24,14 @@ public interface IOderLogService extends IService<OderLog> {
      * @param oderLog
      * @return
      */
-    public boolean writeLog(OderLog oderLog);
+    boolean writeLog(OderLog oderLog);
 
     /***
      * 模块读取未执行且可以执行的指令，并记录读取时间
      * @param moduleId
      * @return
      */
-    public OderLog readLog(Integer moduleId);
+    OderLog readLog(Integer moduleId);
 
     /***
      * 根据执行的指令记录ID进行更新status
@@ -39,7 +39,7 @@ public interface IOderLogService extends IService<OderLog> {
      * @param status
      * @return
      */
-    public boolean updateLog(Integer oderLogId,Integer status);
+    boolean updateLog(Integer oderLogId, Integer status);
 
     /***
      * 用户获取全部指令记录信息（根据status和ReadTime分类为等待中、执行中、执行成功、与执行失败）
@@ -47,12 +47,20 @@ public interface IOderLogService extends IService<OderLog> {
      * @param status
      * @return
      */
-    public List<OderLog> getLogs(boolean isReadOrder,Integer status,Integer limit);
+    List<OderLog> getLogs(boolean isReadOrder, Integer status, Integer limit);
 
     /***
      * 根据status和ReadTime分类为等待中(0)、执行中(1)、执行成功(2)、与执行失败(3),判断是否可以撤销这条指令！
      * @param orderId
      * @return
      */
-    public Integer isUpdate(Integer orderId);
+    Integer isUpdate(Integer orderId);
+
+    /***
+     * 根据模块ID获取对应的指令信息，根据指令记录的写入时间降序读取，仅读取不做其他任何操作！
+     * @param moduleId
+     * @param jt 要最新的几条
+     * @return
+     */
+    List<OderLog> getOderByModuleId(Integer moduleId,Integer jt);
 }

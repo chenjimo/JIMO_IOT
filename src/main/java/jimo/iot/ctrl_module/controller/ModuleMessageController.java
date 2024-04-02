@@ -50,6 +50,7 @@ public class ModuleMessageController {
      * 获取全部模块信息
      * @return
      */
+    @CrossOrigin(origins = "null", maxAge =-1)//用于解决前端的跨域资源共享问题
     @GetMapping("/messages")
     public Message getModuleMessages() {
         List moduleMessageList = new ArrayList<ModuleMessage>();

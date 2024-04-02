@@ -67,6 +67,10 @@ public class PageController {
     public ModelAndView MQ2() {
         return new ModelAndView("deviceView/MQ2");
     }
+    @GetMapping("/templates/modules/modules.html")
+    public ModelAndView modules() {
+        return new ModelAndView("modules/modules");
+    }
 
     /***
      * 控制页面的映射输出

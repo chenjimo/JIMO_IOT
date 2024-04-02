@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>模块信息</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            height: 100vh;
+        }
+
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #e6e6e6;
+        }
+
+        .online {
+            color: #4caf50;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        .offline {
+            color: #f44336;
+            font-weight: bold;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0% {
+                transform: rotate(0);
+            }
+            25% {
+                transform: rotate(-5deg);
+            }
+            75% {
+                transform: rotate(5deg);
+            }
+            100% {
+                transform: rotate(0);
+            }
+        }
+
+        .refresh-button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px auto;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            outline: none;
+        }
+
+        .refresh-button:hover {
+            background-color: #45a049;
+        }
+
+        .aId {
+            display: inline-block;
+            font-size: 18px;
+            padding: 10px 18px;
+            background-color: #dd92e8;
+            color: #03ff11;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid #9911e7;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+<h3 style="color: cornflowerblue">---------------------智能模块在线状态---------------------</h3>
+<table id="moduleTable">
+    <tr>
+        <th>ID</th>
+        <th>名称</th>
+        <th>状态</th>
+    </tr>
+</table>
+<button class="refresh-button" onclick="refreshData()">刷新</button>
+<div style="text-align: center;">
+    <a href="/templates/modulesView/SmartRack.html" class="aId">查看“智能晾衣架”模块状态！</a>
+    <a href="/templates/modulesView/SmartWatering.html" class="aId">查看“智能浇水”模块状态！</a>
+    <a href="/templates/modulesView/SmartWatchdog.html" class="aId">查看“智能门窗（安防）”模块状态！</a>
+</div>
+<h3 style="color: darkred">---------------------异常数据日志记录---------------------</h3>
+<table id="deviceLogsTable">
+    <thead>
+    <tr id="deviceLogsTr">
+        <th>数据ID</th>
+        <th>上传ID（名称）</th>
+        <th>记录信号值</th>
+        <th>记录时间</th>
+        <th>异常备注信息</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Table rows will be dynamically inserted here -->
+    </tbody>
+</table>
+<script>
+    <!-- 在页面加载完成时执行一次 API 请求 -->
+    document.addEventListener('DOMContentLoaded', refreshData());
+
+    function refreshData() {
+        $.get("/module/messages", function (response) {
+            var data = response.data;
+            if (!Array.isArray(data)) {
+                console.error('Received data is not an array.');
+                return;
+            }
+
+            var tableBody = '<tr><th>智能模块ID</th><th>智能模块名称</th><th>智能模块在线状态</th></tr>';
+            data.forEach(function (item) {
+                var statusText = item.status == 1 ? "<span class='online'>在线</span>" : "<span class='offline'>不在线</span>";
+                tableBody += "<tr><td>" + item.id + "</td><td>" + item.name + "</td><td>" + statusText + "</td></tr>";
+            });
+
+            $("#moduleTable").empty();
+            $("#moduleTable").append(tableBody);
+        });
+        $.get("/device/logs/error?jt=15&error=4", function (data) {
+            // 清空表格体
+            $("#deviceLogsTable tbody").empty();
+
+            // 遍历JSON数据并创建表格行
+            $.each(data, function (index, item) {
+                var name = getName(item.deviceId); // 假设 getName 函数已定义
+                var row = "<tr>" +
+                    "<td>" + item.id + "</td>" +
+                    "<td>" + item.deviceId + "(" + (name ? name : "未知") + ")" + "</td>" +
+                    "<td>" + item.value + "</td>" +
+                    "<td>" + item.time + "</td>" +
+                    "<td>" + item.bz + "</td>" +
+                    "</tr>";
+                $("#deviceLogsTable tbody").append(row);
+            });
+        });
+    }
+
+    setInterval(refreshData, 3000);
+
+    function getName(id) {
+        var name = "查询不到！";
+        switch (id) {
+            case 1:
+                name = "室外温度";
+                break;
+            case 2:
+                name = "湿度传感器";
+                break;
+            case 3:
+                name = "烟雾传感器";
+                break;
+            case 4:
+                name = "土壤湿度";
+                break;
+            case 5:
+                name = "光感";
+                break;
+            case 6:
+                name = "空气质量";
+                break;
+            case 7:
+                name = "室内温度";
+                break;
+            case 8:
+                name = "水位传感器";
+                break;
+            case 9:
+                name = "天气预判断";
+                break;
+            case 10:
+                name = "室内湿度";
+                break;
+            case 11:
+                name = "门窗状态";
+                break;
+            case 12:
+                name = "智能门窗模式同步标识";
+                break;
+            case 13:
+                name = "报警标识";
+                break;
+            case 14:
+                name = "雨滴检测";
+                break;
+            case 15:
+                name = "衣架状态";
+                break;
+            case 16:
+                name = "衣架模式";
+                break;
+            case 17:
+                name = "是否寻光模式";
+                break;
+        }
+        return name;
+    }
+
+</script>
+</body>
+</html>

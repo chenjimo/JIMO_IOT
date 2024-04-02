@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.swing.text.html.parser.Entity;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -180,6 +181,7 @@ public class DeviceLogServiceImpl extends ServiceImpl<DeviceLogMapper, DeviceLog
     public List<DeviceLog> getDeviceLogsByDeviceId(Integer deviceId) {
         return baseMapper.selectList(Wrappers.<DeviceLog>lambdaQuery().eq(DeviceLog::getDeviceId, deviceId));
     }
+
     /***
      * 根据传感器的ID查询所有记录
      * @param deviceId
@@ -187,10 +189,27 @@ public class DeviceLogServiceImpl extends ServiceImpl<DeviceLogMapper, DeviceLog
      */
     @Override
     public DeviceLog getDeviceLogsByIdOne(Integer deviceId) {
-        return baseMapper.selectOne(Wrappers.<DeviceLog>lambdaQuery().eq(DeviceLog::getDeviceId,deviceId)
+        return baseMapper.selectOne(Wrappers.<DeviceLog>lambdaQuery().eq(DeviceLog::getDeviceId, deviceId)
                 .orderByDesc(DeviceLog::getTime)
                 .ge(DeviceLog::getTime, LocalDateTime.now().minusMinutes(3))
                 .last("LIMIT 1"));
+    }
+
+    /***
+     * 异常数据的展示罗列出来,最新的几条！
+     * @param jt
+     * @param error 长度判断
+     * @return
+     */
+    @Override
+    public List<DeviceLog> getDeviceLogErrorOrder(Integer jt, Integer error) {
+        List<DeviceLog> deviceLogs = null;
+        if (jt >= 0) {
+            deviceLogs = baseMapper.getDeviceLogErrorOrderList(jt,error);
+        } else {
+            deviceLogs = baseMapper.getDeviceLogErrorOrderALL(error);
+        }
+        return deviceLogs;
     }
 
     /***
@@ -223,13 +242,13 @@ public class DeviceLogServiceImpl extends ServiceImpl<DeviceLogMapper, DeviceLog
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         switch (avg) {
             case 1:
-                list.addAll(baseMapper.getAverageByHour(deviceId,jt));
+                list.addAll(baseMapper.getAverageByHour(deviceId, jt));
                 break;
             case 2:
-                list.addAll(baseMapper.getAverageByDay(deviceId,jt));
+                list.addAll(baseMapper.getAverageByDay(deviceId, jt));
                 break;
             case 3:
-                list.addAll(baseMapper.getAverageByMonth(deviceId,jt));
+                list.addAll(baseMapper.getAverageByMonth(deviceId, jt));
                 break;
             default:
                 // 处理默认情况，如果有的话

@@ -58,4 +58,28 @@ public interface DeviceLogMapper extends BaseMapper<DeviceLog> {
     // 按照月份降序排序
     List<Map<String, Object>> getAverageByMonth(Integer deviceId, Integer limit);
 
+    /***
+     *异常数据的展示罗列出来,最新的几条！
+     * @param limit
+     * @param error
+     * @return
+     */
+    @Select("SELECT * FROM Device_Log   " +
+            "WHERE LENGTH(bz) > #{error}   " +
+            "ORDER BY time DESC " +
+            "LIMIT #{limit}")
+    // 按照月份降序排序
+    List<DeviceLog> getDeviceLogErrorOrderList(Integer limit, Integer error);
+
+    /***
+     *异常数据的展示罗列出来,全部！
+     * @param error
+     * @return
+     */
+    @Select("SELECT * FROM Device_Log   " +
+            "WHERE LENGTH(bz) > #{error}   " +
+            "ORDER BY time DESC ")
+    // 按照月份降序排序
+    List<DeviceLog> getDeviceLogErrorOrderALL(Integer error);
+
 }

@@ -54,4 +54,12 @@ public interface IDeviceLogService extends IService<DeviceLog> {
      * @return
      */
     DeviceLog getDeviceLogsByIdOne(Integer deviceId);
+
+    /***
+     * 异常数据的展示罗列出来,最新的几条！
+     * @param jt
+     * @param error 长度判断
+     * @return
+     */
+    List<DeviceLog> getDeviceLogErrorOrder(Integer jt,Integer error);
 }

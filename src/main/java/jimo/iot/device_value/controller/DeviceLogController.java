@@ -97,9 +97,9 @@ public class DeviceLogController {
                     break;
                 case 2://水位信息
                     DeviceLog deviceLogsByIdOne6 = deviceLogService.getDeviceLogsByIdOne(8);//waterV
-                    if (deviceLogsByIdOne6 != null){
-                        b  = true;
-                        map.put("waterV",deviceLogsByIdOne6.getValue());
+                    if (deviceLogsByIdOne6 != null) {
+                        b = true;
+                        map.put("waterV", deviceLogsByIdOne6.getValue());
                     }
                     break;
                 case 3://最新的模式信息、门窗信息、
@@ -108,8 +108,8 @@ public class DeviceLogController {
                     DeviceLog deviceLogsByIdOne5 = deviceLogService.getDeviceLogsByIdOne(12);//pattern
                     if (deviceLogsByIdOne4 != null && deviceLogsByIdOne5 != null) {
                         b = true;
-                        map.put("DoorStatus",deviceLogsByIdOne4.getValue());
-                        map.put("pattern",deviceLogsByIdOne5.getValue());
+                        map.put("DoorStatus", deviceLogsByIdOne4.getValue());
+                        map.put("pattern", deviceLogsByIdOne5.getValue());
                     }
                     break;
             }
@@ -125,6 +125,17 @@ public class DeviceLogController {
     @GetMapping("/logs")
     public List<DeviceLog> getLogs(DeviceLog deviceLog, Integer jt) {
         return deviceLogService.getDeviceLogsByDeviceIdAndJT(deviceLog.getDeviceId(), jt);
+    }
+
+    /***
+     * 通异常数据的展示罗列出来,并限制数量
+     * @return
+     */
+    @GetMapping("/logs/error")
+    public List<DeviceLog> getLogsError(Integer jt, Integer error) {
+        jt = jt == null ? 0 : jt;
+        error = error == null ? 0 : error < 0 ? 0 : error;
+        return deviceLogService.getDeviceLogErrorOrder(jt, error);
     }
 
     /***

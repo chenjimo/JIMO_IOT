@@ -28,4 +28,37 @@ public class DateUtil {
         DateFormat df = DateFormat.getDateInstance(DateFormat.ERA_FIELD);
         return df.format(date);
     }
+
+    /***
+     * 根据秒数据处理动态显示天-时-分
+     * @param seconds
+     * @return
+     */
+    public static String formatDuration(long seconds) {
+        // 定义一个StringBuilder来构建结果字符串
+        StringBuilder result = new StringBuilder();
+
+        // 计算天数
+        long days = seconds / (24 * 3600);
+        if (days > 0) {
+            result.append(days).append("天 ");
+            seconds %= (24 * 3600);
+        }
+
+        // 计算小时数
+        long hours = seconds / 3600;
+        if (hours > 0) {
+            result.append(hours).append("小时 ");
+            seconds %= 3600;
+        }
+
+        // 计算分钟数
+        long minutes = seconds / 60;
+        if (minutes > 0 || result.length() == 0) {
+            result.append(minutes).append("分钟");
+        }
+
+        return result.toString();
+    }
+
 }
