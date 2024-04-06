@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>JIMO-IOT-Login</title>
+    <link rel="stylesheet" type="text/css" href="../../static/login/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/login/css/scanboardLogin.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/login/css/animsition.css"/>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1; /* 占据除了页脚之外的所有空间 */
+            /* 其他内容样式 */
+        }
+
+        .Copyright {
+            margin-top: auto; /* 将页脚推至屏幕底部 */
+            text-align: center; /* 水平居中 */
+        }
+
+        .subheading {
+            /* 你的样式 */
+        }
+
+        .base_footer_text {
+            /* 你的样式 */
+        }
+
+        .base_footer_text a {
+            /* 链接样式 */
+        }
+    </style>
+</head>
+<body>
+<div class="wp animsition">
+    <div class="boardLogin">
+        <a href="#" class="logo">
+            <img src="../../static/login/images/loginLogo.png">
+        </a>
+        <form>
+            <div class="inpGroup">
+                <span class="loginIco1"></span>
+                <input type="text"  id="email" placeholder="请输入您的登录邮箱！">
+            </div>
+            <div class="prompt" id="emailError">
+                <p class="error" style="display: none;">请输入有效的邮箱地址</p>
+            </div>
+
+            <div class="inpGroup">
+                <span class="loginIco2"></span>
+                <input type="password" id="pwd" name="" placeholder="请输入您的密码">
+            </div>
+            <div class="prompt" id="pwdError">
+                <p class="error" style="display: none;">密码不能为空</p>
+            </div>
+
+             <div onclick="login()" class="submit">登录</div>
+<!--            <a onclick="login()" class="animsition-link submit">登录</a>-->
+        </form>
+    </div>
+</div>
+<div class="Copyright"><p class="subheading" style="font-size: 18px;    background: linear-gradient(to right, red, blue);    -webkit-background-clip: text;
+    color: transparent;"><span id="myText" class="base_footer_text">Copyright © 2022-2024 Power by 己墨的个人世界</span>
+    <span id="myhao" class="base_footer_text">ICP备案号：<a href="https://beian.miit.gov.cn" target="_blank">豫ICP备2022001932号-2</a></span>
+</p></div>
+<div id="particles-js"></div>
+
+</body>
+<script src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/login/js/jquery.animsition.js"></script>
+<script src="../../static/login/js/particles.min.js"></script>
+<script src="../../static/login/js/app.js"></script>
+<script src="../../static/layer/layer.js"></script>
+<script type="text/javascript">
+    function login() {
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("pwd").value;
+
+        // 验证邮箱格式
+        var emailError = document.getElementById("emailError");
+        if (!validateEmail(email)) {
+            emailError.querySelector(".error").style.display = "block";
+            return;
+        } else {
+            emailError.querySelector(".error").style.display = "none";
+        }
+
+        // 验证密码非空
+        var pwdError = document.getElementById("pwdError");
+        if (!password.trim()) {
+            pwdError.querySelector(".error").style.display = "block";
+            return;
+        } else {
+            pwdError.querySelector(".error").style.display = "none";
+        }
+        let load = layer.load();
+        $.post("/user/login", {
+            email: email,
+            pwd: password,
+        }, function (data) {
+            layer.close(load);
+            layer.msg(data.result);
+            if (data.status === 200) {
+                // 使用相对路径
+                window.location.href = "/";
+            } else {
+                //录入失败
+            }
+        });
+    }
+
+    // 验证邮箱格式
+    function validateEmail(email) {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
+    $(".animsition").animsition({
+        inClass: 'fade-in',
+        outClass: 'fade-out',
+        inDuration: 800,
+        outDuration: 1000,
+        linkElement: '.animsition-link',
+
+        loading: false,
+        loadingParentElement: 'body',
+        loadingClass: 'animsition-loading',
+        unSupportCss: ['animation-duration',
+            '-webkit-animation-duration',
+            '-o-animation-duration'
+        ],
+
+
+        overlay: false,
+
+        overlayClass: 'animsition-overlay-slide',
+        overlayParentElement: 'body'
+    });
+</script>
+</html>

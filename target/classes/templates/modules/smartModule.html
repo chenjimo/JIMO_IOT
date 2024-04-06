@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>智能模块信息</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            height: 100vh;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #e6e6e6;
+        }
+
+        .online {
+            color: #4caf50;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        .offline {
+            color: #f44336;
+            font-weight: bold;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0% {
+                transform: rotate(0);
+            }
+            25% {
+                transform: rotate(-5deg);
+            }
+            75% {
+                transform: rotate(5deg);
+            }
+            100% {
+                transform: rotate(0);
+            }
+        }
+
+        .refresh-button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px auto;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            outline: none;
+        }
+
+        .refresh-button:hover {
+            background-color: #45a049;
+        }
+
+        .aId {
+            display: inline-block;
+            font-size: 18px;
+            padding: 10px 18px;
+            background-color: #dd92e8;
+            color: #03ff11;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid #9911e7;
+        }
+        /* 媒体查询，为小屏幕设备设置不同样式 */
+        @media (max-width: 1000px) {
+            .health {
+                /* 在小屏幕上，你可以进一步调整宽度或高度 */
+                max-width: 100%; /* 或者根据需要设置其他值 */
+                height: 30vh; /* 高度自适应，根据内容自动调整 */
+            }
+            .status {
+                font-size: 12px;
+                margin-top: 5px;
+                font-weight: bold;
+                color: rgb(255, 115, 0);
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 14px;
+                margin: 2px 1px;
+                cursor: pointer;
+                border-radius: 2px;
+            }
+
+            .modelV {
+                font-size: 16px;
+                font-weight: bold;
+                color: #fc0404;
+            }
+        }
+    </style>
+    <!--    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>-->
+    <!--    <script src="../../static/js/chart-3.7.0.min.js"></script>-->
+    <script src="../../static/js/jquery-3.6.4.min.js"></script>
+    <script src="../../static/layer/layer.js"></script>
+</head>
+<body>
+<h2 style="color: cornflowerblue">-------智能模块状态展示-------</h2>
+<p class="aId">智能感知模块在线状态: <span id="smartStatus">正在获取...</span></p>
+<button onclick="changeModule(5)">开启（关闭）感知模块</button>
+<div class="status">
+    <p class="aId">是否开启智能天气感知: <span id="weatherStatus">正在获取...</span></p>
+    <p class="aId">是否开启智能指令中断: <span id="oderStatus">正在获取...</span></p>
+</div>
+<div>
+    <button  onclick="changeOder(17)">开启（关闭）智能天气感知</button>
+    <button  onclick="changeOder(16)">开启（关闭）智能指令中断</button>
+</div>
+<h3 style="color: aquamarine">-------智能感知处理记录展示-------</h3>
+<table id="deviceLogsTable">
+    <thead>
+    <tr id="deviceLogsTr">
+        <th>数据ID</th>
+        <th>指令ID</th>
+        <th>写入ID</th>
+        <th>模块ID</th>
+        <th>发布时间</th>
+        <th>执行时间</th>
+        <th>状态值</th>
+        <th>备注信息</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Table rows will be dynamically inserted here -->
+    </tbody>
+</table>
+<script>
+    <!-- 在页面加载完成时执行一次 API 请求 -->
+    document.addEventListener('DOMContentLoaded', updateData());
+    var smartMode = -1;
+    var weatherStatus = -1;
+    var oderStatus = -1;
+
+    function updateData() {
+        // 从服务器获取数据-刷新设备在线状态
+        fetch('/module/message?moduleId=5')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('响应异常，请重试！！！');
+                }
+                return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+                // 假设 dataFromServer 是包含 JSON 字符串的变量
+                var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+                //更新门窗状态
+                var smart = document.getElementById('smartStatus');
+                if (jsonObject.status == "200") {
+                    smartMode = jsonObject.data.mode;//更新数据
+                    //更新模式状态
+                    switch (parseInt(jsonObject.data.mode)) {
+                        case 0:
+                            smart.innerHTML = "<span style='color: rgb(255, 212, 0);'>未开启</span>";
+                            break;
+                        case 1:
+                            smart.innerHTML = "<span style='color: rgb(0, 161, 255);'>已开启</span>";
+                            break;
+                        default:
+                            smart.innerHTML = "<span style='color: rgb(255, 0, 229);'>更新失败！</span>";
+                    }
+                } else {
+                    t.innerHTML = "<span style='color: rgb(177,0,252);'>查询失败！</span>";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                layer.msg('网络响应异常，亲，请你检查IOT系统是否正常！');
+            });
+
+        // 从服务器获取数据-刷新指令的在线状态
+        fetch('/oder/message/id?id=17')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('响应异常，请重试！！！');
+                }
+                return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+                // 假设 dataFromServer 是包含 JSON 字符串的变量
+                var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+                //更新门窗状态
+                var smart = document.getElementById('weatherStatus');
+                if (jsonObject != null) {
+                    weatherStatus = jsonObject.status;//更新数据
+                    //更新模式状态
+                    switch (parseInt(jsonObject.status)) {
+                        case 0:
+                            smart.innerHTML = "<span style='color: rgb(255, 212, 0);'>未开启</span>";
+                            break;
+                        case 1:
+                            smart.innerHTML = "<span style='color: rgb(0, 161, 255);'>已开启</span>";
+                            break;
+                        default:
+                            smart.innerHTML = "<span style='color: rgb(255, 0, 229);'>更新失败！</span>";
+                    }
+                } else {
+                    t.innerHTML = "<span style='color: rgb(177,0,252);'>查询失败！</span>";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                layer.msg('网络响应异常，亲，请你检查IOT系统是否正常！');
+            });
+        fetch('/oder/message/id?id=16')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('响应异常，请重试！！！');
+                }
+                return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+                // 假设 dataFromServer 是包含 JSON 字符串的变量
+                var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+                var smart = document.getElementById('oderStatus');
+                if (jsonObject != null) {
+                    oderStatus = jsonObject.status;//更新数据
+                    //更新模式状态
+                    switch (parseInt(jsonObject.status)) {
+                        case 0:
+                            smart.innerHTML = "<span style='color: rgb(255, 212, 0);'>未开启</span>";
+                            break;
+                        case 1:
+                            smart.innerHTML = "<span style='color: rgb(0, 161, 255);'>已开启</span>";
+                            break;
+                        default:
+                            smart.innerHTML = "<span style='color: rgb(255, 0, 229);'>更新失败！</span>";
+                    }
+                } else {
+                    t.innerHTML = "<span style='color: rgb(177,0,252);'>查询失败！</span>";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                layer.msg('网络响应异常，亲，请你检查IOT系统是否正常！');
+            });
+        $.get("/oder/logs/moduleId?moduleId=5&jt=10", function (data) {
+            // 清空表格体
+            $("#deviceLogsTable tbody").empty();
+            // 遍历JSON数据并创建表格行
+            $.each(data, function (index, item) {
+                var nameOder = item.oderId === 16 ? "智能指令中断" : item.oderId === 17 ? "智能天气感知" : null;
+                var nameUser = item.userId === 1 ? "JIMO" : item.userId === 2 ? "test" : null;
+                var row = "<tr>" +
+                    "<td>" + item.id + "</td>" +
+                    "<td>" + item.oderId + "(" + (nameOder != null ? nameOder : "新增") + ")" + "</td>" +
+                    "<td>" + item.userId + "(" + (nameUser != null ? nameUser : "新增") + ")" + "</td>" +
+                    "<td>" + item.moduleId + "(智能感知模块)" + "</td>" +
+                    "<td>" + item.writeTime + "</td>" +
+                    "<td>" + item.readTime + "</td>" +
+                    "<td>" + item.status + "</td>" +
+                    "<td>" + item.bz + "</td>" +
+                    "</tr>";
+                $("#deviceLogsTable tbody").append(row);
+            });
+        });
+    }
+
+    // 启动定时器，每秒更新数据
+    intervalId = setInterval(updateData, 5000);
+
+    function changeModule(id) {
+        if (smartMode !== -1) {//标识获取到了当前数据
+            let load = layer.load();
+            smartMode = smartMode === 0 ? 1 : 0;
+            $.post("/module/message", {
+                id: id,
+                mode: smartMode,
+            }, function (data) {
+                layer.close(load);
+                layer.msg(data.result);
+                var smart = document.getElementById('smartStatus');
+                if (data.status === 200) {
+                    if (smartMode === 1) {
+                        smart.innerHTML = "<span style='color: rgb(0, 161, 255);'>已开启</span>";
+                    } else {
+                        smart.innerHTML = "<span style='color: rgb(255, 212, 0);'>未开启</span>";
+                    }
+                } else {
+                    //录入失败
+                }
+            });
+        } else {
+            layer.msg("状态数据获取不全！");
+        }
+    }
+
+    function changeOder(id) {
+        if (id === 16 ? oderStatus !== -1 : weatherStatus !== -1) {//标识获取到了当前数据
+            let load = layer.load();
+            smartMode = smartMode === 0 ? 1 : 0;
+            $.post("/oder/message", {
+                id: id,
+                status: id === 16 ? (oderStatus === 0 ? 1 : 0) : (weatherStatus === 0 ? 1 : 0),
+                moduleId: 5,
+            }, function (data) {
+                layer.close(load);
+                layer.msg(data.result);
+                if (data.status === 200) {
+                } else {
+                    //录入失败
+                }
+            });
+        } else {
+            layer.msg("状态数据获取不全！");
+        }
+    }
+</script>
+</body>
+</html>

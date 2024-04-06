@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="http://jimo.fun/img/my/jm.png">
+    <title>Smart_Watering-家庭控制台</title>
+    <!-- 引入Chart.js库 -->
+    <script src="../../static/js/chart-3.7.0.min.js"></script>
+    <!--layui.js-->
+    <script src="../../static/layer/layui-2.9.7.min.js"></script>
+    <!--layui.css-->
+    <script src="../../static/css/layui.css"></script>
+<!--    <link rel="stylesheet" type="text/css" href="../../static/watering/css/monitor.css"/>-->
+</head>
+<style>
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .status {
+        font-size: 20px;
+        margin-top: 20px;
+        font-weight: bold;
+        color: rgb(255, 115, 0);
+    }
+
+    .modelV {
+        font-size: 21px;
+        font-weight: bold;
+        color: #fc0404;
+    }
+
+    /* 让后两个 p 并排显示 */
+    .status p:nth-child(2),
+    .status p:nth-child(3) {
+        display: inline-block;
+        margin-left: 20px;
+        /* 调整间距 */
+    }
+
+    #WaterStatus,
+    #SpinStatus {
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        color: #c903fa;
+    }
+
+    #oderMessage {
+        font-size: 16px;
+        font-weight: bold;
+        color: #e31dfd;
+        /* 设置选择框文本颜色 */
+        background-color: #a0c0c5;
+        /* 设置选择框背景色 */
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    /* 自动模式的字体颜色为蓝色 */
+    .option1 {
+        color: rgb(247, 203, 10);
+    }
+
+    /* 智能模式的字体颜色为绿色 */
+    .option2 {
+        color: rgb(14, 255, 54);
+    }
+
+    /* 严防模式的字体颜色为红色 */
+    .option3 {
+        color: red;
+    }
+
+    .health {
+        /* 使用百分比设置宽度，使其在不同屏幕尺寸下都能适应 */
+        width: 100%;
+        /*max-width: 1200px; !* 限制最大宽度，防止过大 *!*/
+        height: 55vh; /* 高度自适应，根据内容自动调整 */
+        margin: 0 auto; /* 水平居中 */
+        border: none; /* 移除边框 */
+        overflow: auto; /* 内容过多时出现滚动条 */
+    }
+
+    /* 媒体查询，为小屏幕设备设置不同样式 */
+    @media (max-width: 1000px) {
+        .health {
+            /* 在小屏幕上，你可以进一步调整宽度或高度 */
+            max-width: 100%; /* 或者根据需要设置其他值 */
+            height: 30vh; /* 高度自适应，根据内容自动调整 */
+        }
+        .status {
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: bold;
+            color: rgb(255, 115, 0);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px 1px;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .modelV {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fc0404;
+        }
+    }
+</style>
+
+<body>
+<h2>智能浇水模块状态监视</h2>
+<div class="status">
+    <p class="option2">设备在线状态: <span id="timeStatus">正在获取...</span></p>
+</div>
+<a href="http://iot.jimo.fun/" target="_blank">
+    <button>返回JIMO-IOT首页</button>
+</a>
+<button onclick="changePage(1)">最近一周情况</button>
+<button onclick="changePage(2)">最近三个月情况</button>
+<button onclick="changePage(3)">全部情况</button>
+<!-- 创建一个Canvas元素用于显示图表 -->
+<div id="htmlBody">
+    <iframe id="embeddedPage" class="health" src="/templates/modulesView/SmartWatering-week.html"></iframe>
+</div>
+<!-- 当前门和窗的状态显示 -->
+<div>
+    <div class="status">
+        <p class="modelV">当前设备水量: <span id="modeStatus">正在获取...</span></p>
+        <p>最近一次下发指令: <span id="oderStatus">正在获取...</span></p>
+    </div>
+</div>
+<!-- <button onclick="startWatering()">点我-洒洒水呀(●'◡'●)！</button> -->
+
+<a href="/templates/controller/setOder.html" target="_blank">
+    <button>下发控制指令(●'◡'●)！</button>
+</a>
+
+<script>
+    <!-- 在页面加载完成时执行一次 API 请求 -->
+    document.addEventListener('DOMContentLoaded',updateData());
+    function updateData() {
+        // 从服务器获取数据-刷新设备水位情况
+        fetch('/device/log/moduleId?id=2')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('响应异常，请重试！！！');
+                }
+                return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+                // 假设 dataFromServer 是包含 JSON 字符串的变量
+                var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+                //更新门窗状态
+                var m = document.getElementById('modeStatus');
+                if (jsonObject.status == "200") {
+                    //更新模式状态
+                    switch (parseInt(jsonObject.data.waterV)) {
+                        case 0:
+                            m.innerHTML = "<span style='color: rgb(255, 212, 0);'>水仓水位过低</span>";
+                            break;
+                        case 1:
+                            m.innerHTML = "<span style='color: rgb(0, 161, 255);'>水仓水量足够</span>";
+                            break;
+                        default:
+                            m.innerHTML = "<span style='color: rgb(255, 0, 229);'>更新失败！</span>";
+                    }
+                } else {
+                    m.innerHTML = "<span style='color: rgb(177,0,252);'>设备未上线！</span>";
+                }
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                layer.msg('网络响应异常，亲，请你检查设备是否在线！（绿灯亮为在线）');
+            });
+        // 从服务器获取数据-刷新最近一次指令情况
+        fetch('/oder/log/moduleId?moduleId=2')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('响应异常，请重试！！！');
+                }
+                return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+                // 假设 dataFromServer 是包含 JSON 字符串的变量
+                var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+                //更新门窗状态
+                var w = document.getElementById('oderStatus');
+                if (jsonObject.status == "200") {
+                    //更新模式状态
+                    w.innerHTML = "<span style='color: rgb(0, 161, 255);'>"+jsonObject.data+"</span>";
+                } else {
+                    m.innerHTML = "<span style='color: rgb(177,0,252);'>"+jsonObject.data+"</span>";
+                }
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                layer.msg('网络响应异常，亲，请你检查设备是否在线！（绿灯亮为在线）');
+            });
+        // 从服务器获取数据-刷新设备在线状态
+        fetch('/module/times?moduleId=2')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('响应异常，请重试！！！');
+                }
+                return response.text(); // 假设服务器返回纯文本数据
+            })
+            .then(dataFromServer => {
+                // 假设 dataFromServer 是包含 JSON 字符串的变量
+                var jsonObject = JSON.parse(dataFromServer); // 解析 JSON 字符串为 JavaScript 对象
+                //更新门窗状态
+                var t = document.getElementById('timeStatus');
+                if (jsonObject.status == "200") {
+                    //更新模式状态
+                    t.innerHTML = "<span style='color: rgb(0, 161, 255);'>"+jsonObject.data+"</span>";
+                } else {
+                    t.innerHTML = "<span style='color: rgb(177,0,252);'>暂无该设备记录！</span>";
+                }
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                layer.msg('网络响应异常，亲，请你检查设备是否在线！（绿灯亮为在线）');
+            });
+    }
+
+    function changePage(pageType) {
+        var iframe = document.getElementById("embeddedPage");
+        switch (pageType) {
+            case 1:
+                iframe.src = "/templates/modulesView/SmartWatering-week.html";
+                break;
+            case 2:
+                iframe.src = "/templates/modulesView/SmartWatering-mouth.html";
+                break;
+            case 3:
+                iframe.src = "/templates/modulesView/SmartWatering-all.html";
+                break;
+            default:
+                break;
+        }
+    }
+
+    // 启动定时器，每5秒更新数据
+    intervalId = setInterval(updateData, 5000);
+
+</script>
+</body>
+
+</html>

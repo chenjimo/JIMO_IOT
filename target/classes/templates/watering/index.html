@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<base th:href="${#request.getContextPath()}+'/'">
+<head>
+    <meta charset="UTF-8">
+    <title>数据同步实时监控</title>
+    <link rel="stylesheet" type="text/css" href="../../static/watering/css/monitor.css"/>
+</head>
+<body>
+<span id="bugBtn" title="同步过程出现错误数据，请检查" onclick="hideBugBtn('')"></span>
+<span id="localtime" style=" font-size:14px; position: absolute; z-index: 10; right: 25px; top:5px; "></span>
+<span class="btn btn-blue btn-big" id="refreshBtn" title="默认 1min 刷新一次">刷新</span>
+<div style="height: 620px;">
+    <header class="t_header">
+        <span>数据同步实时监控</span>
+    </header>
+    <div style="margin-top: 20px;">
+        <div class="t_left_box">
+            <img class="t_l_line" src="../../static/watering/images/left_line.png" alt="">
+            <div class="t_mbox">
+                <div>今日已同步</div>
+                <span id="todaySyncSpan">3658742</span>
+                <i></i>
+            </div>
+            <div class="t_mbox">
+                <div>待同步</div>
+                <span id="todayNoSyncSpan">152</span>
+                <i></i>
+            </div>
+            <div class="t_mbox">
+                <div>同步延时(秒)</div>
+                <span id="syncDelaySpan">0.5</span>
+                <i></i>
+            </div>
+            <div class="t_mbox">
+                <div>状态</div>
+                <span id="syncStateSpan">正常</span>
+            </div>
+            <img class="t_r_line" src="../../static/watering/images/right_line.png" alt="">
+        </div>
+        <div class="t_top_box">
+            <img class="t_l_line" src="../../static/watering/images/left_line.png" alt="">
+            <ul class="t_nav">
+                <li>
+                    <span>新增</span>
+                    <span id="addTj">3 ms</span>
+                    <i></i>
+                </li>
+                <li>
+                    <span>修改</span>
+                    <span id="updateTj">5 ms</span>
+                    <i></i>
+                </li>
+                <li>
+                    <span>删除</span>
+                    <span id="deleteTj">4 ms</span>
+                </li>
+            </ul>
+            <img class="t_r_line" src="../../static/watering/images/right_line.png" alt="">
+        </div>
+        <div class="t_top2_box">
+            <img class="t_l_line" src="../../static/watering/images/left_line.png" alt="">
+            <div class="t_mbox2">
+                <span style="color: #00b3ac; float: left; margin-left: 13%;">已运行：</span>
+                <span id="runTimeTj" style="float: left; margin-left: 5%;"></span>
+            </div>
+            <img class="t_r_line" src="../../static/watering/images/right_line.png" alt="">
+        </div>
+        <div class="t_bottom_box">
+            <img class="t_l_line" src="../../static/watering/images/left_line.png" alt="">
+            <div class="chart" id="taskSize" style="width: 100%; height:100%;"></div>
+            <img class="t_r_line" src="../../static/watering/images/right_line.png" alt="">
+        </div>
+        </div>
+</div>
+<div class="t_table_box">
+    <img class="t_l_line" src="../../static/watering/images/left_line.png" alt="">
+    <input type="text" id="searchText" value="" placeholder="输入内容筛选"/>
+    <table class="commonTable">
+        <thead>
+        <td title="序号" colspan="8">no monitor data</td>
+        </thead>
+    </table>
+    <img class="t_r_line" src="../../static/watering/images/right_line.png" alt="">
+</div>
+<script src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="https://s3.pstatp.com/cdn/expire-1-M/echarts/2.2.7/echarts-all.js"></script>
+
+<script type="text/javascript" src="../../static/watering/js/jquery.count.min.js"></script>
+<script type="text/javascript" src="../../static/watering/js/monitor.js"></script>
+</body>
+</html>
