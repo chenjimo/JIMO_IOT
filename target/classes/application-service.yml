@@ -41,7 +41,11 @@ mybatis-plus:
     map-underscore-to-camel-case: true #开启驼峰命名
 jimo:
   api-util:
-    weatherURL: "http://itdage.cn/hw/weather?city=" #天气请求API地址
+    weatherURL: "https://v1.yiketianqi.com/api" #天气请求API地址
+    weatherVersion: "v62" #天气请求API地址，默认参数
+    weatherAppId: "34163286" #天气请求API地址，默认参数
+    weatherAppSecret: "s8Xxtl0o" #天气请求API地址，默认参数
+    weatherPoint: "浦东新区" #天气请求API地址，默认参数
     sendURL: "http://itdage.cn/hw/hwSms?phoneNumber=" #消息发送API地址
     stringLimit: 33 #字符长度限制,jimo.iot.util.LimitUtil可能数据读取不到,请手动处理或考虑用properties
     webhookURL: https://oapi.dingtalk.com/robot/send?access_token=290006f7f165f5dc1f505eb03f2d0c7d53b546b35eb75157f3acf9244daf9204&timestamp=
@@ -55,7 +59,8 @@ jimo:
     ding:
     phone:
   name: //iot.jimo.fun/ #域名地址！
-  alter:  #这里配置是否开启异常运维提醒仅允许填true或false（建议开启true，开发期间建议关闭！）
+  alter: #这里配置是否开启异常运维提醒仅允许填true或false（建议开启true，开发期间建议关闭！）
     ding: true
     email: true
+    openSmart: true #是否开启智能感知模块功能！
     time: 180 #这里设置报警冷却时间，默认是60S

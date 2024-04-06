@@ -174,4 +174,16 @@ public class OderLogServiceImpl extends ServiceImpl<OderLogMapper, OderLog> impl
                     .last("LIMIT " + jt));
         }
     }
+
+    /***
+     * 根据时间限制处理掉过期的指令进行中断。单位为小时！
+     * @param hours
+     * @param bz
+     * @return
+     */
+    @Override
+    public Integer setPastDueOderAll(Integer hours, String bz) {
+        return baseMapper.updatePastDueOderStatusAndBz(hours, bz);
+    }
+
 }

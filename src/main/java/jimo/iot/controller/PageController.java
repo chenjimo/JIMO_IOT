@@ -169,5 +169,11 @@ public class PageController {
     public ModelAndView getModules33() {
         return new ModelAndView("modulesView/SmartWatchdog-all");
     }
-
+    /***
+     * 智能感知模块信息展示页面
+     */
+    @GetMapping("templates/modules/smartModule.html")
+    public ModelAndView getSmart() {
+        return new ModelAndView("modules/smartModule");
+    }
 }

@@ -183,7 +183,7 @@ public class DeviceLogServiceImpl extends ServiceImpl<DeviceLogMapper, DeviceLog
     }
 
     /***
-     * 根据传感器的ID查询所有记录
+     * 根据传感器的ID查询最近的一条
      * @param deviceId
      * @return
      */

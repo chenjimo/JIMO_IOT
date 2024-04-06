@@ -1,6 +1,7 @@
 package jimo.iot.ctrl_module.controller;
 
 
+import jimo.iot.controller.SmartController;
 import jimo.iot.ctrl_module.entity.ModuleLog;
 import jimo.iot.ctrl_module.entity.OderLog;
 import jimo.iot.ctrl_module.entity.OderMessage;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +47,8 @@ public class OderLogController {
     UserMessageServiceImpl userMessageService;
     @Resource
     ModuleMessageServiceImpl moduleMessageService;
+    @Resource
+    SmartController smartController;
     private static final String success = "恭喜您，操作成功！";
     private static final String error = "抱歉，操作失败，请重试！";
 
@@ -157,8 +162,8 @@ public class OderLogController {
         List<OderLog> orders = oderLogService.getOderByModuleId(moduleLog.getModuleId(), 1);
         return orders == null ? new Message(400, error, "暂未获取到！") :
                 new Message(200, success,
-                        "'"+oderMessageService.readOderMessage(orders.get(0).getOderId()).getName()+"'"+
-                        "在“" + DateUtil.localDateTimeToString(
+                        "'" + oderMessageService.readOderMessage(orders.get(0).getOderId()).getName() + "'" +
+                                "在“" + DateUtil.localDateTimeToString(
                                 orders.get(0).getReadTime() == null ? orders.get(0).getWriteTime() : orders.get(0).getReadTime())
                                 + "”(" + (orders.get(0).getStatus() == -1 ? "已撤销"
                                 : orders.get(0).getStatus() == 0 ? "等待执行"
@@ -175,6 +180,53 @@ public class OderLogController {
      */
     @GetMapping("/logs/moduleId")
     public List<OderLog> getOderListByModuleId(ModuleLog moduleLog, Integer jt) {
+        jt = jt == null || jt < 0 ? 0 : jt;
         return oderLogService.getOderByModuleId(moduleLog.getModuleId(), jt);
+    }
+
+    /***
+     * 手动清楚过期指令的API接口，给出时间和备注，主要用于测试使用！
+     * @param hours
+     * @param bz
+     * @return
+     */
+    @GetMapping("/clear")
+    public Message updatePastDueOderStatusAndBz(Integer hours, String bz) {
+        hours = hours == null ? 0 : hours;
+        Integer i = oderLogService.setPastDueOderAll(hours, bz == null ? "手动API:中断过期指令" : bz);
+        OderLog oderLog = new OderLog();
+        oderLog.setOderId(16);
+        oderLog.setUserId(2);//默认为2后续可以在优化参数
+        oderLog.setModuleId(5);
+        LocalDateTime now = LocalDateTime.now();
+        oderLog.setWriteTime(now);
+        oderLog.setReadTime(now);
+        oderLog.setStatus(1);
+        oderLog.setBz(bz == null ? "updateOderMessage-clear：" + i +",hours:"+hours: bz);//防止为空
+        oderLogService.writeLog(oderLog);
+        return new Message(200, success, i);
+    }
+    /***
+     * 主要用于智能感知的测试API，仅用于测试使用！
+     * @param test
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/smart")
+    public Message testSmart(Integer test) throws IOException {
+        String message = "OK-若没反应-注意：检查智能感知模块是否打开上线！";
+        switch (test) {
+            case 1:
+                smartController.accept("0 0 */3 * * ?");//智能天气感知
+                break;
+            case 2:
+                smartController.accept("0 10 23 * * ?");//智能过期指令感知
+            case 3:
+                smartController.accept("Test");
+                break;
+            default:
+                message = "查无此指令！";
+        }
+        return new Message(200, success, message);
     }
 }

@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <title>JIMO-IOT首页</title>
     <link rel="shortcut icon" href="//jimo.fun/img/my/jm.png"/>
+    <link href="../static/css/normalize.css" type="text/css" rel="stylesheet"/>
+    <link href="../static/css/common.css" type="text/css" rel="stylesheet"/>
+    <script src="../static/js/jquery.min.js" type="text/javascript"></script>
+    <script src="../static/js/common.js" type="text/javascript"></script>
+    <script src="../static/js/notice.js" type="text/javascript"></script>
+    <script src="../static/js/regexp.js" type="text/javascript"></script>
+    <script src="../static/js/jweixin-1.2.0.js" type="text/javascript"></script>
     <style>
         /* 使用 flexbox 布局，横向排列 */
         .container {
@@ -11,55 +18,51 @@
             flex-wrap: wrap;
             justify-content: space-between; /* 左右两侧对齐 */
             align-items: stretch; /* 垂直方向占满整个高度 */
+            height :100vh;
         }
 
         /* 前三个页面占整个屏幕宽度的30% */
-        .container iframe:nth-child(-n+3) {
-            flex: 0 0 32%;
+         iframe:nth-child(-n+3) {
+            /*flex: 32% 32% 32%;*/
             width: 32%;
-            height: 240px;
+            height: 20vh;
             margin-bottom: 20px; /* 设置页面之间的间隔，根据需要调整 */
         }
-
+        /* 默认样式，适用于较大的屏幕，如电脑 */
+        iframe:nth-child(4) {
+            flex: 0 0 90%; /* 使用 flex 属性来设置宽度 */
+            height: 70vh;
+            margin: auto; /* 水平居中 */
+        }
         /* 在较小屏幕上纵向排列 */
-        @media (max-width: 768px) {
+        @media (max-width: 1000px) {
             .container {
-                flex-direction: column; /* 纵向排列 */
-                align-items: center; /* 居中 */
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between; /* 左右两侧对齐 */
+                align-items: stretch; /* 垂直方向占满整个高度 */
+                height :100%;
             }
-
-            .container iframe:nth-child(-n+3) {
+            iframe:nth-child(-n+3) {
                 width: 100%; /* 占满整个宽度 */
-                height: 400px;
-                margin-bottom: 20px; /* 设置页面之间的间隔，根据需要调整 */
+                height: 10vh;
+                margin-bottom: 5px; /* 设置页面之间的间隔，根据需要调整 */
             }
             /* 第四个页面占整个屏幕宽度的60% */
-            .container iframe:nth-child(4) {
+            iframe:nth-child(4) {
                 flex: 0 0 90%;
                 width: 90%;
-                height: 800px;
+                height: 65vh;
                 margin: auto; /* 在水平方向上居中 */
             }
         }
 
-        /* 默认样式，适用于较大的屏幕，如电脑 */
-        .container iframe:nth-child(4) {
-            flex: 0 0 90%; /* 使用 flex 属性来设置宽度 */
-            height: 950px;
-            margin: auto; /* 水平居中 */
-        }
 
-        /* 媒体查询，适用于较小的屏幕，如手机 */
-        @media (max-width: 768px) { /* 这里可以根据需要调整阈值 */
-            .container iframe:nth-child(4) {
-                flex: 0 0 90%; /* 在小屏幕上，让 iframe 占据全部宽度 */
-                height: auto; /* 可以根据内容自适应高度，或者设置具体的高度 */
-            }
-        }
+
         .background-image {
             /*width: 100%; !* 设置 div 的宽度 *!*/
-            height: 200%; /* 设置 div 的高度 */
-            background-image: url('../static/img/img_1.png'); /* 设置背景图片的路径 */
+            height: 120%; /* 设置 div 的高度 */
+            background-image: url('../static/img/img_1.jpg'); /* 设置背景图片的路径 */
             background-size: cover; /* 背景图片大小适应div，并保持比例 */
             background-position: center; /* 背景图片在 div 中居中显示 */
             background-repeat: no-repeat; /* 禁止背景图片重复显示 */
@@ -103,29 +106,55 @@
             border: 2px solid #9911e7;
         }
     </style>
+
   </head>
 <body class="background-image">
-<div class="container ">
-    <iframe src="/templates/deviceView/temp.html"  frameborder="no" allowfullscreen="true"></iframe><!--室内温度-->
-    <iframe src="/templates/deviceView/humidity.html" frameborder="no" allowfullscreen="true"></iframe><!--//室内湿度-->
-    <iframe src="/templates/deviceView/MQ2.html"  frameborder="no" allowfullscreen="true"></iframe><!--室内空气质量-->
-
-    <iframe src="/templates/controller/index.html" frameborder="no" allowfullscreen="true"></iframe>
-    <div style="text-align: center;">
-        <a href="/templates/modulesView/SmartRack.html" class="aId">点击-查看“智能晾衣架”模块状态！</a>
+<div class="headerNav">
+    <div class="headerNavTop">
+        <div class="headerNavIcon headerNavIconOut"><span></span><span></span></div>
     </div>
-    <div style="text-align: center;">
-        <a href="/templates/modulesView/SmartWatering.html" class="aId">点击-查看“智能浇水”模块状态！</a>
-    </div>
-    <div style="text-align: center;">
-        <a href="/templates/modulesView/SmartWatchdog.html" class="aId">点击-查看“智能门窗（安防）”模块状态！</a>
-    </div>
-    <div style="text-align: center;">
-        <a href="/templates/controller/index.html" class="aId">GOTO ---》》》JIMO-IOT 控制中心！！！ </a>
-    </div>
-    <div style="text-align: center;">
-        <a href="/templates/modules/modules.html" class="aId">GOTO ---》》》JIMO-IOT 模块中心-查看模块状态！！！ </a>
+    <div class="headerNavCont">
+        <a href="/login" target="_blank">重新登录！</a>
+        <a href="/templates/modules/modules.html">模块信息-中心！</a>
+        <a href="/templates/controller/index.html">控制信息-中心！</a>
+        <a href="//jimo.fun" target="_blank">JIMO友情🔗</a>
+        <a href="/user/login">用户-登录注销！</a>
     </div>
 </div>
+<div class="container ">
+<iframe src="/templates/deviceView/temp.html"  frameborder="no" allowfullscreen="true"></iframe><!--室内温度-->
+<iframe src="/templates/deviceView/humidity.html" frameborder="no" allowfullscreen="true"></iframe><!--//室内湿度-->
+<iframe src="/templates/deviceView/MQ2.html"  frameborder="no" allowfullscreen="true"></iframe><!--室内空气质量-->
+
+<iframe src="/templates/controller/index.html" frameborder="no" allowfullscreen="true"></iframe>
+    <div style="text-align: center;">
+        <a href="/templates/modules/modules.html" class="aId">GOTO --》》JIMO-IOT 模块中心！！！ </a>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="/templates/modulesView/SmartRack.html" class="aId">查看“智能晾衣架”模块！</a>
+    </div>
+    <div style="text-align: center;">
+        <a href="/templates/modulesView/SmartWatering.html" class="aId">查看“智能浇水”模块！</a>
+    </div>
+    <div style="text-align: center;">
+        <a href="/templates/modulesView/SmartWatchdog.html" class="aId">查看“智能门窗（安防）”模块！</a>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="/templates/modules/smartModule.html" class="aId">查看“智能感知”模块！</a>
+    </div>
+    <div style="text-align: center;">
+        <a href="/templates/controller/index.html" class="aId">GOTO --》》JIMO-IOT 控制中心！！！ </a>
+    </div>
+    <p class="subheading" style="font-size: 18px;
+    background: linear-gradient(to right, red, blue);
+    -webkit-background-clip: text;
+    color: transparent;"> <span class="base_footer_text">Copyright © 2022-2024 Power by 己墨的个人世界</span>
+        <span class="base_footer_text">ICP备案号：<a href="https://beian.miit.gov.cn" target="_blank">豫ICP备2022001932号-2</a></span></p>
+</div>
+
+
+
 </body>
 </html>

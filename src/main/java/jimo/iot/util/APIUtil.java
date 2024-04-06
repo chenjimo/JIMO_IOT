@@ -1,5 +1,6 @@
 package jimo.iot.util;
 
+import jimo.iot.info.newWeather.WeatherRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -20,6 +21,21 @@ public class APIUtil {
     private String sendURL;//发消息API-URL
     @Value("${jimo.api-util.weatherURL}")
     private String weatherURL;//查天气API-URL
+    /***
+     *     weatherVersion: "v62" #天气请求API地址，默认参数
+     *     weatherAppId: "34163286" #天气请求API地址，默认参数
+     *     weatherAppSecret: "s8Xxtl0o" #天气请求API地址，默认参数
+     *     weatherPoint: "浦东新区" #天气请求API地址，默认参数
+     */
+    @Value("${jimo.api-util.weatherVersion}")
+    private String weatherVersion;
+    @Value("${jimo.api-util.weatherAppId}")
+    private String weatherAppId;
+    @Value("${jimo.api-util.weatherAppSecret}")
+    private String weatherAppSecret;
+    @Value("${jimo.api-util.weatherPoint}")
+    private String weatherPoint;
+
     @Value("${spring.mail.username}")
     private String from;//消息发送者mail
     @Resource
@@ -34,6 +50,21 @@ public class APIUtil {
      */
     public String getWeather(String local) {
         return restTemplate.getForObject(weatherURL + local, String.class);
+    }
+
+    /***
+     * 一个新地用于请求天气状况的API
+     * @param weatherRequest 参数信息
+     * @return JSON格式的参数
+     */
+    public String getNewWeatherByHourly(WeatherRequest weatherRequest) {
+        weatherRequest.setVersion(weatherRequest.getVersion() == null ? weatherVersion : weatherRequest.getVersion());
+        weatherRequest.setAppid(weatherRequest.getAppid() == null ? weatherAppId : weatherRequest.getAppid());
+        weatherRequest.setAppsecret(weatherRequest.getAppsecret() == null ? weatherAppSecret : weatherRequest.getAppsecret());
+        weatherRequest.setPoint(weatherRequest.getPoint() == null ? weatherPoint : weatherRequest.getPoint());
+        String url = weatherURL + "?unescape=1&appid=" + weatherRequest.getAppid() + "&version=" + weatherRequest.getVersion() +
+                "&appsecret=" + weatherRequest.getAppsecret() + "&point=" + weatherRequest.getPoint();
+        return restTemplate.getForObject(url, String.class);
     }
 
     /***

@@ -98,14 +98,16 @@
             font-weight: bold;
             border-radius: 18px;
         }
+
         .background-image {
             /*width: 100%; !* 设置 div 的宽度 *!*/
-            height: 1000px; /* 设置 div 的高度 */
-            background-image: url('../../static/img/oder.png'); /* 设置背景图片的路径 */
+            height: 120%; /* 设置 div 的高度 */
+            background-image: url('../../static/img/oder.jpg'); /* 设置背景图片的路径 */
             background-size: cover; /* 背景图片大小适应div，并保持比例 */
             background-position: center; /* 背景图片在 div 中居中显示 */
             background-repeat: no-repeat; /* 禁止背景图片重复显示 */
         }
+
         .input-container {
             display: flex;
             align-items: center;
@@ -123,6 +125,7 @@
             font-size: 16px;
             border: 1px solid #df2a2a;
         }
+
         /* 定义滚动条的宽度、颜色和圆角 */
         ::-webkit-scrollbar {
             width: 8px; /* 宽度 */
@@ -152,24 +155,50 @@
             background-color: #f1f1f1;
         }
 
+        .flex-container {
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中（如果需要的话） */
+            /*height: 1000%; !* 设置容器高度为视窗高度 *!*/
+            /*width: 100%*/
+        }
+
+        .qrhtml {
+            /* 使用百分比设置宽度，使其在不同屏幕尺寸下都能适应 */
+            width: 90%;
+            /*max-width: 1200px; !* 限制最大宽度，防止过大 *!*/
+            height: 1050PX; /* 高度自适应，根据内容自动调整 */
+            margin: 0 auto; /* 水平居中 */
+            border: none; /* 移除边框 */
+            overflow: auto; /* 内容过多时出现滚动条 */
+        }
+
+        /* 媒体查询，为小屏幕设备设置不同样式 */
+        @media (max-width: 768px) {
+            .qrhtml {
+                /* 在小屏幕上，你可以进一步调整宽度或高度 */
+                max-width: 100%; /* 或者根据需要设置其他值 */
+                height: 600PX; /* 高度自适应，根据内容自动调整 */
+            }
+        }
+
     </style>
 </head>
 <body class="background-image">
-<div class="content" >
+<div class="content">
     <div class="headerNav">
         <div class="headerNavTop">
             <div class="headerNavIcon headerNavIconOut"><span></span><span></span></div>
         </div>
         <div class="headerNavCont">
-            <a href="/">用户首页</a>
+            <a href="/" target="_blank">用户首页</a>
             <a href="/templates/controller/index.html">控制中心</a>
-            <a href="//jimo.fun">JIMO友情🔗</a>
+            <a href="//jimo.fun" target="_blank">JIMO友情🔗</a>
         </div>
     </div>
-
-    <div class="expEnterCont" >
+    <div class="expEnterCont">
         <div class="expEnterIcon">
-<!--            <img src="../../static/img/oder.png" width="200" alt="">-->
+            <!--            <img src="../../static/img/oder.jpg" width="200" alt="">-->
             <p id="title">控制指令下发！</p>
         </div>
         <div class="expEnterInput">
@@ -195,7 +224,8 @@
                         <div class="inputTitle">时间:</div>
 
                         <div class="inputTitle">
-                            <input type="number" id="v6" name="company" min="0" max="1440" value="0" placeholder="几分钟后执行，0默认为立即执行">
+                            <input type="number" id="v6" name="company" min="0" max="1440" value="0"
+                                   placeholder="几分钟后执行，0默认为立即执行">
                         </div>
                     </div>
 
@@ -203,16 +233,20 @@
                 <br>
                 <div class="submitBtn" type="button">确认下发指令！</div>
             </div>
+
         </div>
     </div>
 </div>
+<div class="flex-container">
+    <iframe class="qrhtml" src="/templates/modules/modules.html" frameborder="no" allowfullscreen="true"></iframe>
+</div>
 </body>
 <script src="../../static/layer/layer.js"></script>
-<script src="//code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="../../static/js/jquery-3.6.4.min.js"></script>
 
 <script type="text/javascript">
     $(function () {
-                /*判断信息进行初始化处理*/
+        /*判断信息进行初始化处理*/
         $.get("/oder/message", null, function (message) {
             if (message.status === 200 || message.status === 201) {
                 $("#v5").html("");
@@ -228,7 +262,7 @@
 
                         // 遍历 List
                         for (var i = 0; i < OderMessageList.length; i++) {
-                            var item = "<option value=\"" + OderMessageList[i].id + "\">" + OderMessageList[i].name +"("+OderMessageList[i].moduleName+")" +"</option>";
+                            var item = "<option value=\"" + OderMessageList[i].id + "\">" + OderMessageList[i].name + "(" + OderMessageList[i].moduleName + ")" + "</option>";
                             optgroup.append(item);
                         }
                         // 将optgroup添加到下拉框中
@@ -241,11 +275,16 @@
         $(".submitBtn").click(function () {
             let val5 = $.trim($("#v5").val());
             let val6 = $.trim($("#v6").val());
-            if (val5 === "" || val5.length === 0||val6 === "" || val6.length === 0) {
+            if (val5 === "" || val5.length === 0 || val6 === "" || val6.length === 0) {
                 layer.msg("亲，指令不能为空啊！")
                 return;
             }
-           let load = layer.load();
+            ///*JIMO-IOT_V1.3智能感知模块默认是开启的，所以在前端做一些限制，等JIMO-IOT_V1.3版本以后的优化后可撤离该方法！*/
+            if (val5 == "16" || val5 == "17") {
+                layer.msg("亲(●'◡'●)，智能感知模块随IOT系统启动，默认是开启状态的！")
+                return;
+            }
+            let load = layer.load();
             $.post("/oder/messages", {
                 oderId: val5,
                 delay: val6,

@@ -3,6 +3,7 @@ package jimo.iot.ctrl_module.service;
 import jimo.iot.ctrl_module.entity.OderLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -63,4 +64,14 @@ public interface IOderLogService extends IService<OderLog> {
      * @return
      */
     List<OderLog> getOderByModuleId(Integer moduleId,Integer jt);
+
+    /***
+     * 根据时间限制处理掉过期的指令进行中断。单位为小时！
+     * @param hours
+     * @param bz 根据定义写入信息
+     * @return
+     */
+    Integer setPastDueOderAll(Integer hours,String bz);
+
+
 }
