@@ -1,4 +1,5 @@
-> APIFOX的接口文档，以及基础开发文档：
+原文地址：[点解进入，强烈建议看原文](https://www.yuque.com/jimoworld/javabj/jimo-iot-v1.3)
+> 强调 APIFOX的接口文档，以及基础开发文档：
 
 [JIMO-IOT](https://www.yuque.com/jimoworld/javabj/jimo-iot?view=doc_embed)<br />[JIMO-IOT开发文档 - 智能家居API](https://apifox.com/apidoc/shared-55794de6-2e29-439d-8e95-f00259162eee/doc-3252500)
 <a name="s2PX7"></a>
