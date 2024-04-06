@@ -6,20 +6,16 @@
 我们要实现的是HTTP协议下的CloudServerController直接对ESP的通信，ESP将UNO中传感器数值对应POST请求给云端Mysql、ESP对云端PUT（update）请求的硬件模块状态修改、ESP通过GET请求直接获取相关API的信息用于UNO的控制判断。没有MQTT的中间商会减小很多延迟和简化系统复杂度。
 
 #### 软件架构
-软件架构说明![输入图片说明](https://www.yuque.com/jimoworld/javabj/jimo-iot?inner=SZMHM "在这里输入图片标题")
-
+版本1.3V[JIMO_IOT-V1.3](https://gitee.com/chenjimo/JIMO_IOT/tree/V1.3//)
+版本1.0V[JIMO_IOT-V1.0](https://gitee.com/chenjimo/JIMO_IOT/tree/V1.0/)
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+后续给个B站视频讲解吧！
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+见版本里面的原开发文档！[欢迎关注我的语雀知识库](https://www.yuque.com/jimoworld)
 
 #### 参与贡献
 
