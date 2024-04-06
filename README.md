@@ -1,3 +1,9 @@
+ **
+
+### 粗体
+** [强烈建议阅读原文](https://www.yuque.com/jimoworld/javabj/jimo-iot)
+
+
 > 针对物联网的控制及数据整理开发一个云系统,集成对硬件的便捷控制处理及数据的可视化展示!
 > [物联网 - chenjimo (chenjimo) - Gitee.com](https://gitee.com/chenjimo/collections/375599)
 > JIMO-IOT的整体开发正在设计过程中，后续开发好整理好资料，会在[https://gitee.com/chenjimo](https://gitee.com/chenjimo)我的码云进行开源，后续更新请持续关注！
