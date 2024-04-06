@@ -15,6 +15,7 @@
 后续给个B站视频讲解吧！
 
 #### 使用说明
+![输入图片说明](imgimage3.png)
 
 见版本里面的原开发文档！[欢迎关注我的语雀知识库](https://www.yuque.com/jimoworld)
 
