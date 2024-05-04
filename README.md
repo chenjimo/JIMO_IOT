@@ -13,6 +13,7 @@
 #### 安装教程
 
 后续给个B站视频讲解吧！
+[基于JIMO-IOT的智能家居开发案例](https://gitee.com/chenjimo/SmartHome)
 
 #### 使用说明
 ![输入图片说明](imgimage3.png)
